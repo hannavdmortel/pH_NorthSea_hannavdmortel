@@ -5,7 +5,8 @@ from cartopy import crs as ccrs, feature as cfeature
 import seaborn as sns
 
 #IMPORT DATA
-northsea = pd.read_csv("coordinates_stations.csv")
+northsea = pd.read_csv(
+    "C:/Users/hanna/Documents/Marine Sciences/NIOZ/CO2 flux and acidification North Sea/Python/Station map/coordinates_stations.csv")
 
 northsea["lon_radians"] = np.deg2rad(northsea.lon_dd)
 northsea["lat_radians"] = np.deg2rad(northsea.lat_dd)
@@ -33,12 +34,12 @@ ax.text(4.55, 53.1, "DOOVB", fontsize='xx-small',
                'alpha':0.5, 'pad':1},
         transform=ccrs.PlateCarree())
 ax.text(4.63, 52.59, "EGMAZE", fontsize='xx-small', 
-        bbox ={'fc':'yellow', 'ec':'none',
-               'alpha':0.6, 'pad':1},
+        bbox ={'fc':'yellowgreen', 'ec':'none',
+               'alpha':0.5, 'pad':1},
         transform=ccrs.PlateCarree())
 ax.text(6.3, 53.3, "EILDBG", fontsize='xx-small', 
-         bbox ={'fc':'yellowgreen', 'ec':'none',
-               'alpha':0.7, 'pad':1},
+         bbox ={'fc':'greenyellow', 'ec':'none',
+               'alpha':0.6, 'pad':1},
         transform=ccrs.PlateCarree())
 ax.text(3.94, 51.8, "GOERE", fontsize='xx-small', 
         bbox ={'fc':'lightgreen', 'ec':'none',
@@ -61,12 +62,12 @@ ax.text(4.45413, 52.23, "NOORDWK", fontsize='xx-small',
                'alpha':0.6, 'pad':1},
         transform=ccrs.PlateCarree())
 ax.text(6.58, 53.7, "ROTTMPT", fontsize='xx-small',
-        bbox ={'fc':'cyan', 'ec':'none',
+        bbox ={'fc':'darkturquoise', 'ec':'none',
                'alpha':0.4, 'pad':1},
         transform=ccrs.PlateCarree())
 ax.text(3.67, 51.64, "SCHOUWN", fontsize='xx-small', 
         bbox ={'fc':'cornflowerblue', 'ec':'none',
-               'alpha':0.5, 'pad':1},
+               'alpha':0.7, 'pad':1},
         transform=ccrs.PlateCarree())
 ax.text(3.4, 52.3, "TERHDE", fontsize='xx-small', 
         bbox ={'fc':'navy', 'ec':'none',
@@ -84,7 +85,7 @@ ax.text(3.5, 51.5, "WALCRN", fontsize='xx-small',
         bbox ={'fc':'darkviolet', 'ec':'none',
                'alpha':0.4, 'pad':1},
         transform=ccrs.PlateCarree())
-ax.text(5.32, 53.25, "WESTMP", fontsize='xx-small', 
+ax.text(5.35, 53.26, "WESTMP", fontsize='xx-small', 
         bbox ={'fc':'orchid', 'ec':'none',
                'alpha':0.6, 'pad':1},
         transform=ccrs.PlateCarree())
@@ -94,7 +95,7 @@ ax.text(5.4, 53.84, "ZOUTKPLZGT", fontsize='xx-small',
         transform=ccrs.PlateCarree())
 ax.text(6.52, 53.45, "ZUIDOLWNOT", fontsize='xx-small', 
          bbox ={'fc':'indigo', 'ec':'none',
-               'alpha':0.5, 'pad':1},
+               'alpha':0.48, 'pad':1},
         transform=ccrs.PlateCarree())
 
 #COLORS STATION MARKERS
@@ -147,8 +148,8 @@ ax.add_feature(
     facecolor="none")
 
 ax.gridlines(alpha=0.3, draw_labels=True)
-ax.set_title('North Sea station locations')
-plt.savefig("map_stations_northsea.png")
+ax.set_title('Rijkswaterstaat Stations: North Sea & Wadden Sea')
+plt.savefig("C:/Users/hanna/Documents/Marine Sciences/NIOZ/CO2 flux and acidification North Sea/Python/Station map/map_stations_northsea.png")
 
 
 
