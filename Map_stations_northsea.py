@@ -147,8 +147,10 @@ ax.add_feature(
     edgecolor = cfeature.COLORS['water'], 
     facecolor="none")
 
+#FIGURE FORMATTING
 ax.gridlines(alpha=0.3, draw_labels=True)
 ax.set_title('Rijkswaterstaat Stations: North Sea & Wadden Sea')
+
 plt.savefig("C:/Users/hanna/Documents/Marine Sciences/NIOZ/CO2 flux and acidification North Sea/Python/Station map/map_stations_northsea.png")
 
 
