@@ -5,15 +5,15 @@ from scipy import stats
 
 #CHOOSE STATION
 #Case insensitive
-stationcode = "walcrn70"
+stationcode = "terhde70"
 
 filename = "C:/Users/hanna/Documents/Marine Sciences/NIOZ/CO2 flux and acidification North Sea/rws-the-olden-days/data/x13/"+ stationcode.upper() + ".parquet"
 df = pq.read_table(source=filename).to_pandas()
 
 #CHOOSE VARIABLES
 #(+ _irregular, _seasonal or _trend, or datenum for time)
-var1 = "ammonia_trend"
-var2 = "nitrite_trend"
+var1 = "pH_trend"
+var2 = "spm_trend"
 
 fig, ax = plt.subplots(dpi=300)
 
@@ -30,7 +30,6 @@ L = (~np.isnan(var1_np) & ~np.isnan(var2_np))
 x = var1_np[L]
 y = var2_np[L]
 
-#Linear
 slope, intercept, rv, pv, se = stats.linregress(x, y)
 var1_interp = np.linspace(np.min(x), np.max(x))
 ax.plot(var1_interp, intercept + slope * var1_interp, c='red', label = 'linear')
