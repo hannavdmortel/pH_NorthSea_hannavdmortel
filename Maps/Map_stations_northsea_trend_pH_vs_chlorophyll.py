@@ -14,17 +14,17 @@ northsea["lat_radians"] = np.deg2rad(northsea.lat_dd)
 #CREATE FIGURE
 fig = plt.figure(dpi=300)
 ax = fig.add_subplot(projection=ccrs.Robinson())
-#ax.set_extent([2.3, 7.3, 51.3, 54.9], crs=ccrs.PlateCarree())
+ax.set_extent([2.3, 6.8, 51.3, 54.9], crs=ccrs.PlateCarree())
 
 #ADD LOCATION LABELS
 # ax.text(5.3, 53.08, "BLAUWSOT", fontsize='xx-small',
 #         bbox ={'fc':'red', 'ec':'none',
 #                 'alpha':0.5, 'pad':1},
 #         transform=ccrs.PlateCarree())
-# ax.text(4.70187, 52.77, "CALLOG", fontsize='xx-small',
-#         bbox ={'fc':'chocolate', 'ec':'none',
-#                 'alpha':0.5, 'pad':1},
-#         transform=ccrs.PlateCarree()) 
+ax.text(4.70187, 52.77, "CALLOG", fontsize='xx-small',
+        bbox ={'fc':'chocolate', 'ec':'none',
+                'alpha':0.5, 'pad':1},
+        transform=ccrs.PlateCarree()) 
 # ax.text(5.22, 53.49, "DANTZGT", fontsize='xx-small', 
 #         bbox ={'fc':'goldenrod', 'ec':'none',
 #                 'alpha':0.5, 'pad':1},
@@ -57,10 +57,10 @@ ax.text(3.94, 51.8, "GOERE", fontsize='xx-small',
 #         bbox ={'fc':'mediumspringgreen', 'ec':'none',
 #                'alpha':0.5, 'pad':1},
 #         transform=ccrs.PlateCarree())
-# ax.text(4.45413, 52.23, "NOORDWK", fontsize='xx-small',
-#         bbox ={'fc':'turquoise', 'ec':'none',
-#                 'alpha':0.6, 'pad':1},
-#         transform=ccrs.PlateCarree())
+ax.text(4.45413, 52.23, "NOORDWK", fontsize='xx-small',
+        bbox ={'fc':'turquoise', 'ec':'none',
+                'alpha':0.6, 'pad':1},
+        transform=ccrs.PlateCarree())
 ax.text(5.8, 53.95, "ROTTMPT", fontsize='xx-small',
         bbox ={'fc':'darkturquoise', 'ec':'none',
                 'alpha':0.4, 'pad':1},
@@ -105,23 +105,21 @@ color_map = dict(zip(color_labels, rgb_values))
 
 #SELECTING STATIONS
 chosen_stations = [
-    "ZOUTKPLZGT",
-    "DANTZGT",
-    "WESTMP",
+    "ROTTMPT20",
     "ROTTMPT70",
+    "ROTTMPT100",
+    "TERSLG10",
+    "TERSLG30",
     "TERSLG50",
-    "TERSLG100",
-    "TERSLG135",
-    "CALLOG4"
-    "NOORDWK4",
-    "GOERE6",
-    "GOERE10",
-    "GOERE20",
-    "SCHOUWN1",
-    "SCHOUWN4",
-    "SCHOUWN10",
-    "WALCRN4",
+    "TERSLG175",
+    "CALLOG30",
+    "NOORDWK50",
+    "GOERE70",
+    "SCHOUWN30",
+    "SCHOUWN50",
     "WALCRN20",
+    "WALCRN30",
+    "WALCRN50",
     "WALCRN70"]
 
 #locations = northsea['location'].to_numpy()
@@ -185,10 +183,10 @@ ax.add_feature(
 gl = ax.gridlines(alpha=0.3, draw_labels=True)
 gl.top_labels = False
 gl.right_labels = False
-ax.set_title('Seasonal: pH vs spm')
+ax.set_title('Trend: pH vs chlorophyll')
 
 #plt.savefig("C:/Users/hanna/Documents/Marine Sciences/NIOZ/CO2 flux and acidification North Sea/Python/Station map/map_stations_northsea.png")
-plt.savefig("C:/Users/hanna/Documents/Marine Sciences/NIOZ/CO2 flux and acidification North Sea/Python/Station map/map_stations_northsea_seasonal_pH_vs_spm.png")
+plt.savefig("C:/Users/hanna/Documents/Marine Sciences/NIOZ/CO2 flux and acidification North Sea/Python/Station map/map_stations_northsea_trend_pH_vs_chlorophyll.png")
 
 
 

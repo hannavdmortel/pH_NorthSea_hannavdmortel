@@ -21,10 +21,10 @@ ax = fig.add_subplot(projection=ccrs.Robinson())
 #         bbox ={'fc':'red', 'ec':'none',
 #                 'alpha':0.5, 'pad':1},
 #         transform=ccrs.PlateCarree())
-# ax.text(4.70187, 52.77, "CALLOG", fontsize='xx-small',
-#         bbox ={'fc':'chocolate', 'ec':'none',
-#                 'alpha':0.5, 'pad':1},
-#         transform=ccrs.PlateCarree()) 
+ax.text(4.70187, 52.77, "CALLOG", fontsize='xx-small',
+        bbox ={'fc':'chocolate', 'ec':'none',
+                'alpha':0.5, 'pad':1},
+        transform=ccrs.PlateCarree()) 
 # ax.text(5.22, 53.49, "DANTZGT", fontsize='xx-small', 
 #         bbox ={'fc':'goldenrod', 'ec':'none',
 #                 'alpha':0.5, 'pad':1},
@@ -73,10 +73,10 @@ ax.text(3.67, 51.64, "SCHOUWN", fontsize='xx-small',
 #         bbox ={'fc':'navy', 'ec':'none',
 #                'alpha':0.35, 'pad':1},
 #         transform=ccrs.PlateCarree())
-# ax.text(4.3, 53.58, "TERSLG", fontsize='xx-small',
-#         bbox ={'fc':'mediumblue', 'ec':'none',
-#                 'alpha':0.4, 'pad':1},
-#         transform=ccrs.PlateCarree())
+ax.text(4.5, 53.58, "TERSLG", fontsize='xx-small',
+        bbox ={'fc':'mediumblue', 'ec':'none',
+                'alpha':0.4, 'pad':1},
+        transform=ccrs.PlateCarree())
 # ax.text(4.73, 53.2621, "VLIES", fontsize='xx-small',
 #         bbox ={'fc':'springgreen', 'ec':'none',
 #                'alpha':0.6, 'pad':1},
@@ -105,13 +105,15 @@ color_map = dict(zip(color_labels, rgb_values))
 
 #SELECTING STATIONS WITH IRREGULAR BLOOMS
 irregularblooms = [
+    "ZUIDOLWNOT",
     "ZOUTKPLZGT",
     "DANTZGT",
-    "DOOVB",
+    "WESTMP",
+    "DOOVBWT",
     "BLAUWSOT",
-    "TERSLG30"
+    "TERSLG10",
     "TERSLG50",
-    "CALLOG4"
+    "CALLOG4",
     "NOORDWK4",
     "NOORDWK10",
     "NOORDWK20",
