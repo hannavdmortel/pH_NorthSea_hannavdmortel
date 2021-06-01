@@ -6,7 +6,7 @@ import seaborn as sns
 
 #IMPORT DATA
 northsea = pd.read_csv(
-    "C:/Users/hanna/Documents/Marine Sciences/NIOZ/CO2 flux and acidification North Sea/Python/Station map/coordinates_stations.csv")
+    "data/coordinates_stations.csv")
 
 northsea["lon_radians"] = np.deg2rad(northsea.lon_dd)
 northsea["lat_radians"] = np.deg2rad(northsea.lat_dd)
@@ -21,10 +21,10 @@ ax = fig.add_subplot(projection=ccrs.Robinson())
 #         bbox ={'fc':'red', 'ec':'none',
 #                 'alpha':0.5, 'pad':1},
 #         transform=ccrs.PlateCarree())
-# ax.text(4.70187, 52.77, "CALLOG", fontsize='xx-small',
-#         bbox ={'fc':'chocolate', 'ec':'none',
-#                 'alpha':0.5, 'pad':1},
-#         transform=ccrs.PlateCarree()) 
+ax.text(4.70187, 52.77, "CALLOG", fontsize='xx-small',
+        bbox ={'fc':'chocolate', 'ec':'none',
+                'alpha':0.5, 'pad':1},
+        transform=ccrs.PlateCarree()) 
 # ax.text(5.22, 53.49, "DANTZGT", fontsize='xx-small', 
 #         bbox ={'fc':'goldenrod', 'ec':'none',
 #                 'alpha':0.5, 'pad':1},
@@ -57,14 +57,14 @@ ax.text(3.94, 51.8, "GOERE", fontsize='xx-small',
 #         bbox ={'fc':'mediumspringgreen', 'ec':'none',
 #                'alpha':0.5, 'pad':1},
 #         transform=ccrs.PlateCarree())
-# ax.text(4.45413, 52.23, "NOORDWK", fontsize='xx-small',
-#         bbox ={'fc':'turquoise', 'ec':'none',
-#                 'alpha':0.6, 'pad':1},
-#         transform=ccrs.PlateCarree())
-ax.text(5.8, 53.95, "ROTTMPT", fontsize='xx-small',
-        bbox ={'fc':'darkturquoise', 'ec':'none',
-                'alpha':0.4, 'pad':1},
+ax.text(4.45413, 52.23, "NOORDWK", fontsize='xx-small',
+        bbox ={'fc':'turquoise', 'ec':'none',
+                'alpha':0.6, 'pad':1},
         transform=ccrs.PlateCarree())
+# ax.text(6.58, 53.7, "ROTTMPT", fontsize='xx-small',
+#         bbox ={'fc':'darkturquoise', 'ec':'none',
+#                'alpha':0.4, 'pad':1},
+#         transform=ccrs.PlateCarree())
 ax.text(3.67, 51.64, "SCHOUWN", fontsize='xx-small', 
         bbox ={'fc':'cornflowerblue', 'ec':'none',
                 'alpha':0.7, 'pad':1},
@@ -73,7 +73,7 @@ ax.text(3.67, 51.64, "SCHOUWN", fontsize='xx-small',
 #         bbox ={'fc':'navy', 'ec':'none',
 #                'alpha':0.35, 'pad':1},
 #         transform=ccrs.PlateCarree())
-ax.text(4.3, 53.58, "TERSLG", fontsize='xx-small',
+ax.text(4.5, 53.58, "TERSLG", fontsize='xx-small',
         bbox ={'fc':'mediumblue', 'ec':'none',
                 'alpha':0.4, 'pad':1},
         transform=ccrs.PlateCarree())
@@ -105,22 +105,26 @@ color_map = dict(zip(color_labels, rgb_values))
 
 #SELECTING STATIONS WITH IRREGULAR BLOOMS
 irregularblooms = [
+    "ZUIDOLWNOT",
     "ZOUTKPLZGT",
     "DANTZGT",
     "WESTMP",
-    "ROTTMPT70",
+    "DOOVBWT",
+    "BLAUWSOT",
+    "TERSLG10",
     "TERSLG50",
-    "TERSLG100",
-    "TERSLG135",
-    "CALLOG4"
+    "CALLOG4",
     "NOORDWK4",
+    "NOORDWK10",
+    "NOORDWK20",
+    "NOORDWK30",
+    "NOORDWK70",
     "GOERE6",
-    "GOERE10",
-    "GOERE20",
     "SCHOUWN1",
     "SCHOUWN4",
     "SCHOUWN10",
     "WALCRN4",
+    "WALCRN10",
     "WALCRN20",
     "WALCRN70"]
 
@@ -185,10 +189,10 @@ ax.add_feature(
 gl = ax.gridlines(alpha=0.3, draw_labels=True)
 gl.top_labels = False
 gl.right_labels = False
-ax.set_title('Seasonal: pH vs spm')
+ax.set_title('Irregular: algal blooms/sediment resuspension')
 
 #plt.savefig("C:/Users/hanna/Documents/Marine Sciences/NIOZ/CO2 flux and acidification North Sea/Python/Station map/map_stations_northsea.png")
-plt.savefig("C:/Users/hanna/Documents/Marine Sciences/NIOZ/CO2 flux and acidification North Sea/Python/Station map/map_stations_northsea_seasonal_pH_vs_spm.png")
+plt.savefig("C:/Users/hanna/Documents/GitHub/pH-North-Sea/Maps/figures/irregularblooms.png")
 
 
 

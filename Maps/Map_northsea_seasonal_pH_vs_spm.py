@@ -6,7 +6,7 @@ import seaborn as sns
 
 #IMPORT DATA
 northsea = pd.read_csv(
-    "C:/Users/hanna/Documents/Marine Sciences/NIOZ/CO2 flux and acidification North Sea/Python/Station map/coordinates_stations.csv")
+    "data/coordinates_stations.csv")
 
 northsea["lon_radians"] = np.deg2rad(northsea.lon_dd)
 northsea["lat_radians"] = np.deg2rad(northsea.lat_dd)
@@ -62,7 +62,7 @@ ax.text(4.45413, 52.23, "NOORDWK", fontsize='xx-small',
         bbox ={'fc':'turquoise', 'ec':'none',
                 'alpha':0.6, 'pad':1},
         transform=ccrs.PlateCarree())
-ax.text(5.8, 53.95, "ROTTMPT", fontsize='xx-small',
+ax.text(5.65, 53.95, "ROTTMPT", fontsize='xx-small',
         bbox ={'fc':'darkturquoise', 'ec':'none',
                 'alpha':0.4, 'pad':1},
         transform=ccrs.PlateCarree())
@@ -148,24 +148,23 @@ for i in range(len(northsea.station_code)):
 L2 = northsea.no_data
 northsea_L2 = northsea[L2]
 
-#PLOT FALSE STATIONS CLEAR
-# for i in northsea["chosen_stations"]:
-#     if (northsea["chosen_stations"] == False):
-#         ax.scatter(northsea.lon_dd, northsea.lat_dd, 
-#                s=20, c='black', 
-#                linewidth=0.4, edgecolor='black', zorder=10,
-#                transform=ccrs.PlateCarree())
+#PLOT NON-CHOSEN STATIONS CLEAR
+X = ~northsea.chosen_stations
+ax.scatter(northsea[X].lon_dd, northsea[X].lat_dd,
+           s=10, zorder=10, color='none',
+           linewidth=0.2, edgecolor = 'black',
+           transform=ccrs.PlateCarree())
 
 #PLOT TRUE STATIONS IN COLOUR
 ax.scatter(northsea_L.lon_dd, northsea_L.lat_dd, 
-           s=20, c=northsea_L.location_code.map(color_map), 
+           s=10, c=northsea_L.location_code.map(color_map), 
            linewidth=0.4, edgecolor='black', zorder=10,
            transform=ccrs.PlateCarree())
 
 #PLOT STATIONS WITHOUT DATA
 ax.scatter(northsea_L2.lon_dd, northsea_L2.lat_dd, 
-           s=20, c='black', marker='x', 
-           linewidth=0.6, edgecolor='black', zorder=5,
+           s=10, c='grey', zorder=20, alpha=0.8,
+           linewidth=0.2, edgecolor='grey',
            transform=ccrs.PlateCarree())
 
 #CARTOPY FEATURES
@@ -198,8 +197,7 @@ gl.top_labels = False
 gl.right_labels = False
 ax.set_title('Seasonal: pH vs spm')
 
-#plt.savefig("C:/Users/hanna/Documents/Marine Sciences/NIOZ/CO2 flux and acidification North Sea/Python/Station map/map_stations_northsea.png")
-plt.savefig("C:/Users/hanna/Documents/Marine Sciences/NIOZ/CO2 flux and acidification North Sea/Python/Station map/map_stations_northsea_seasonal_pH_vs_spm.png")
+plt.savefig("C:/Users/hanna/Documents/GitHub/pH-North-Sea/Maps/figures/seasonal_pH_vs_spm.png")
 
 
 

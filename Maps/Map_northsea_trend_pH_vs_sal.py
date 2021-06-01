@@ -6,7 +6,7 @@ import seaborn as sns
 
 #IMPORT DATA
 northsea = pd.read_csv(
-    "C:/Users/hanna/Documents/Marine Sciences/NIOZ/CO2 flux and acidification North Sea/Python/Station map/coordinates_stations.csv")
+    "data/coordinates_stations.csv")
 
 northsea["lon_radians"] = np.deg2rad(northsea.lon_dd)
 northsea["lat_radians"] = np.deg2rad(northsea.lat_dd)
@@ -179,7 +179,7 @@ gl.right_labels = False
 ax.set_title('Trend: pH vs salinity')
 
 #plt.savefig("C:/Users/hanna/Documents/Marine Sciences/NIOZ/CO2 flux and acidification North Sea/Python/Station map/map_stations_northsea.png")
-plt.savefig("C:/Users/hanna/Documents/Marine Sciences/NIOZ/CO2 flux and acidification North Sea/Python/Station map/map_stations_northsea_trend_pH_vs_sal.png")
+plt.savefig("C:/Users/hanna/Documents/GitHub/pH-North-Sea/Maps/figures/trend_pH_vs_sal.png")
 
 
 
