@@ -4,7 +4,7 @@ import numpy as np
 from datetime import datetime
 from scipy import interpolate, stats
 
-rws_file = 'C:/Users/hanna/Documents/Marine Sciences/NIOZ/CO2 flux and acidification North Sea/rws-the-olden-days/data/old_rws_data/rws_compilation.parquet'
+rws_file = 'C:/Users/hanna/Documents/GitHub/rws-the-olden-days/data/old_rws_data/rws_compilation.parquet'
 rws = pd.read_parquet(rws_file, engine='auto')
 
 #rws.sort_values(by='datetime', inplace=True)

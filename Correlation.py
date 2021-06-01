@@ -5,15 +5,15 @@ from scipy import stats
 
 #CHOOSE STATION
 #Case insensitive
-stationcode = "walcrn"
+stationcode = "walcrn50"
 
-filename = "C:/Users/hanna/Documents/Marine Sciences/NIOZ/CO2 flux and acidification North Sea/rws-the-olden-days/data/x13/"+ stationcode.upper() + ".parquet"
+filename = "C:/Users/hanna/Documents/GitHub/rws-the-olden-days/data/x13/"+ stationcode.upper() + ".parquet"
 df = pq.read_table(source=filename).to_pandas()
 
 #CHOOSE VARIABLES
 #(+ _irregular, _seasonal or _trend, or datenum for time)
-var1 = "nitrite_trend"
-var2 = "chlorophyll_trend"
+var1 = "oxygen_trend"
+var2 = "aou_trend"
 
 fig, ax = plt.subplots(dpi=300)
 
