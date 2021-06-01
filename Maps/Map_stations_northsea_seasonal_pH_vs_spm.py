@@ -17,6 +17,7 @@ ax = fig.add_subplot(projection=ccrs.Robinson())
 #ax.set_extent([2.3, 7.3, 51.3, 54.9], crs=ccrs.PlateCarree())
 
 #ADD LOCATION LABELS
+# (Put into dict for simplification)
 # ax.text(5.3, 53.08, "BLAUWSOT", fontsize='xx-small',
 #         bbox ={'fc':'red', 'ec':'none',
 #                 'alpha':0.5, 'pad':1},
@@ -148,14 +149,14 @@ L2 = northsea.no_data
 northsea_L2 = northsea[L2]
 
 #PLOT FALSE STATIONS CLEAR
-for i in northsea["chosen_stations"]:
-    if (northsea["chosen_stations"] == False):
-        ax.scatter(northsea.lon_dd, northsea.lat_dd, 
-               s=20, c='black', 
-               linewidth=0.4, edgecolor='black', zorder=10,
-               transform=ccrs.PlateCarree())
+# for i in northsea["chosen_stations"]:
+#     if (northsea["chosen_stations"] == False):
+#         ax.scatter(northsea.lon_dd, northsea.lat_dd, 
+#                s=20, c='black', 
+#                linewidth=0.4, edgecolor='black', zorder=10,
+#                transform=ccrs.PlateCarree())
 
-#PLOT TRUE STATIONS IN COLOUR OVER FALSE
+#PLOT TRUE STATIONS IN COLOUR
 ax.scatter(northsea_L.lon_dd, northsea_L.lat_dd, 
            s=20, c=northsea_L.location_code.map(color_map), 
            linewidth=0.4, edgecolor='black', zorder=10,
