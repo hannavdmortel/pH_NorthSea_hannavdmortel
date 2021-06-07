@@ -5,15 +5,24 @@ from scipy import stats
 
 #CHOOSE STATION
 #Case insensitive
-stationcode = "walcrn50"
+stationcode = "schouwn30"
+# chosen_stations = [
+#     "ROTTMPT20",
+#     "ROTTMPT30",
+#     "ROTTMPT50",
+#     "ROTTMPT70",
+#     "EGMAZE70",
+#     "TERHDE70",
+#     "SCHOUWN20",
+#     "WALCRN4"]
 
 filename = "C:/Users/hanna/Documents/GitHub/rws-the-olden-days/data/x13/"+ stationcode.upper() + ".parquet"
 df = pq.read_table(source=filename).to_pandas()
 
 #CHOOSE VARIABLES
 #(+ _irregular, _seasonal or _trend, or datenum for time)
-var1 = "oxygen_trend"
-var2 = "aou_trend"
+var1 = "pH_trend"
+var2 = "spm_trend"
 
 fig, ax = plt.subplots(dpi=300)
 

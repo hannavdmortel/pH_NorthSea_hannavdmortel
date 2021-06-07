@@ -135,6 +135,7 @@ northsea_L = northsea[L]
 
 #SELECTING STATIONS WITHOUT DATA
 no_data = [
+    "IJMDN3",
     "CALLOG10",
     "CALLOG50",
     "MALZN",
