@@ -209,20 +209,20 @@ ax.scatter(northsea[X].lon_dd, northsea[X].lat_dd,
 
 #PLOT TRUE STATIONS IN COLOUR
 ax.scatter(northsea_L_P.lon_dd, northsea_L_P.lat_dd, 
-           s=25, c='blue', zorder=10, label = 'P',
+           s=25, c='royalblue', zorder=10, label = 'P',
            transform=ccrs.PlateCarree())
 
 ax.scatter(northsea_L_Si.lon_dd, northsea_L_Si.lat_dd, 
-           s=12, c='plum', zorder=15, label = 'Si',
+           s=12, c='violet', zorder=15, label = 'Si',
            transform=ccrs.PlateCarree())
 
 ax.scatter(northsea_L_N.lon_dd, northsea_L_N.lat_dd, 
-           s=4, c="darkgreen", zorder=20, label = 'N',
+           s=3, c="forestgreen", zorder=20, label = 'N',
            transform=ccrs.PlateCarree())
 
 #PLOT STATIONS WITHOUT DATA
 ax.scatter(northsea_L2.lon_dd, northsea_L2.lat_dd, 
-           s=25, c='grey', zorder=25,
+           s=25, c='grey', zorder=50,
            label='no data',
            transform=ccrs.PlateCarree())
 
