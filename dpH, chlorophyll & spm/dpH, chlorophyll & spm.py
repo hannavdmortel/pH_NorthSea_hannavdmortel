@@ -31,9 +31,6 @@ for stationcode in northsea.station_code:
         min_pH = df_L_year.pH.min()
         max_pH = df_L_year.pH.max()
         
-        #Interpolate between min and max pH
-        dpH = np.linspace(min_pH, max_pH, num = len(df_L_year))
-        
         #Create logical to select timing onset spring bloom (from min_pH to max_pH)
         L_start = (df.pH == min_pH)
         L_peak = (df.pH == max_pH)
@@ -42,9 +39,17 @@ for stationcode in northsea.station_code:
         start_spring_bloom = df.datenum[L_start]
         peak_spring_bloom = df.datenum[L_peak]
         
+        #Logical to drop nan for spm
+        spm = df_L_year.spm
+        L_spm = (~np.isnan(df_L_year.spm))
+        df_L_spm = df_L_year[L_spm]
+        
+        #Interpolate between min and max pH
+        dpH = np.linspace(min_pH, max_pH, num = len(df_L_spm.spm))
+        
         #Plotting against spm
         fig, ax = plt.subplots(dpi=300)
-        ax.scatter(dpH, df_L_year.spm, s=20, c='xkcd:red')
+        ax.scatter(dpH, df_L_spm.spm, s=20, c='xkcd:red')
         
         #Add linear regression
         # interp_linear = interpolate.interp1d(dpH, , kind='linear')
@@ -55,8 +60,9 @@ for stationcode in northsea.station_code:
         # linestyle="--")
         
         #Spearman
-        pearson_coef, p_value = stats.pearsonr(dpH, df_L_year) #define the columns to perform calculations on
-        ax.text(0, 0, f"Pearson coefficient = {pearson_coef}"
+        #Sometimes dpH and df_L_spm.spm don't have values
+        pearson_coef, p_value = stats.pearsonr(dpH, df_L_spm.spm) #define the columns to perform calculations on
+        ax.text(0, 0, f"Pearson coefficient = {pearson_coef}")
         
         #Formatting
         ax.set_title(f"{stationcode} {year}")
@@ -64,5 +70,5 @@ for stationcode in northsea.station_code:
         ax.set_ylabel('SPM')
         
         #Saving to separate station folders
-        plt.savefig(f"/dpH vs spm/figures/{stationcode}/{year} {stationcode}.png")
+        #plt.savefig(f"dpH vs spm/figures/{stationcode} {year} spm.png")
 
