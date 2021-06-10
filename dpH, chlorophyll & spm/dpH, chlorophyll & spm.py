@@ -10,6 +10,7 @@ import matplotlib.dates as mdates
 northsea = pd.read_csv(
     "C:/Users/hanna/Documents/GitHub/pH-North-Sea/Maps/data/coordinates_stations.csv")
 
+#%%
 #Loop through stations
 for stationcode in northsea.station_code:
     filename = "C:/Users/hanna/Documents/GitHub/rws-the-olden-days/data/x13/"+ stationcode + ".parquet"
@@ -39,36 +40,47 @@ for stationcode in northsea.station_code:
         start_spring_bloom = df.datenum[L_start]
         peak_spring_bloom = df.datenum[L_peak]
         
-        #Logical to drop nan for spm
-        spm = df_L_year.spm
-        L_spm = (~np.isnan(df_L_year.spm))
-        df_L_spm = df_L_year[L_spm]
-        
         #Interpolate between min and max pH
-        dpH = np.linspace(min_pH, max_pH, num = len(df_L_spm.spm))
-        
+        dpH = np.linspace(min_pH, max_pH, num = len(df_L_year))
+
         #Plotting against spm
         fig, ax = plt.subplots(dpi=300)
-        ax.scatter(dpH, df_L_spm.spm, s=20, c='xkcd:red')
+        ax.scatter(dpH, df_L_year.spm, s=60, 
+                   marker='o', c='royalblue', label = 'SPM')
         
-        #Add linear regression
-        # interp_linear = interpolate.interp1d(dpH, , kind='linear')
-        # slope, intercept, rv, pv, se = stats.linregress(volume, emf)
-        # volume_interp = np.linspace(np.min(volume), np.max(volume), num=500)
-        # emf_linear = interp_linear(volume_interp)
-        # ax.plot(volume_interp, emf_linear, label="interp1d linear",
-        # linestyle="--")
+        #Plotting against chlorophyll
+        ax2 = ax.twinx()
+        ax2.scatter(dpH, df_L_year.chlorophyll, s=60, 
+                    marker='x', c='seagreen', label = 'Chlorophyll')
         
-        #Spearman
-        #Sometimes dpH and df_L_spm.spm don't have values
-        pearson_coef, p_value = stats.pearsonr(dpH, df_L_spm.spm) #define the columns to perform calculations on
-        ax.text(0, 0, f"Pearson coefficient = {pearson_coef}")
+        #PROBLEM: there are nan values, but if you remove these there are missing values
+        #How do I ignore nan and missing values?
+        
+        #Add linear regressions for SPM & Chlorophyll
+        # L_spm = ~np.isnan(df_L_year.spm)
+        # slope, intercept, rv, pv, se = stats.linregress(dpH, df_L_year.spm[L_spm])
+        # ax.plot(dpH, intercept + slope * dpH,
+        #         c='royalblue', label='Linear regression SPM')
+
+        # L_chlorophyll = ~np.isnan(df_L_year.chlorophyll)
+        # slope2, intercept2, rv2, pv2, se2 = stats.linregress(dpH, df_L_year.chlorophyll[L_chlorophyll])
+        # ax2.plot(dpH, intercept2 + slope2 * dpH,
+        #         c='seagreen', label='Linear regression Chlorophyll')
+        
+        #Pearson 
+        # L_pearson = df_L_year.spm.notnull()
+        # df_L_pearson = df_L_year.spm[L_pearson]
+        # dpH_pearson = np.linspace(min_pH, max_pH, num = len(df_L_pearson))
+        # pearson_coef, p_value = stats.pearsonr(dpH_pearson, df_L_pearson)
+        # ax.text(0, 0, f"Pearson coefficient = {pearson_coef}")
         
         #Formatting
         ax.set_title(f"{stationcode} {year}")
         ax.set_xlabel('\u0394' + 'pH')
         ax.set_ylabel('SPM')
-        
-        #Saving to separate station folders
-        #plt.savefig(f"dpH vs spm/figures/{stationcode} {year} spm.png")
+        ax2.set_ylabel('Chlorophyll')
+        fig.legend(loc='upper right', bbox_to_anchor=(1.25, 0.55))
+       
+        #Saving
+        #plt.savefig(f"figures/{stationcode} {year}.png")
 
