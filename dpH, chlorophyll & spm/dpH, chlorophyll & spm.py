@@ -11,6 +11,9 @@ northsea = pd.read_csv(
     "C:/Users/hanna/Documents/GitHub/pH-North-Sea/Maps/data/coordinates_stations.csv")
 
 #%%
+
+#Take average spm during march/spring
+#Plot against dpH
 #Loop through stations
 for stationcode in northsea.station_code:
     filename = "C:/Users/hanna/Documents/GitHub/rws-the-olden-days/data/x13/"+ stationcode + ".parquet"
@@ -25,20 +28,17 @@ for stationcode in northsea.station_code:
     
     #Loop through years
     for year in range(min_year, max_year):
-        L_year = (df.datenum > mdates.date2num('{}-01-01'.format(year))) & (df.datenum < mdates.date2num('{}-01-01'.format(year+1)))
+        L_year = (df.datenum > mdates.datestr2num('{}-01-01'.format(year))) & (df.datenum < mdates.datestr2num('{}-01-01'.format(year+1)))
         df_L_year = df[L_year]
         
         #Calculate min and max pH per year
         min_pH = df_L_year.pH.min()
         max_pH = df_L_year.pH.max()
+        dpH = max_pH - min_pH
         
-        #Create logical to select timing onset spring bloom (from min_pH to max_pH)
-        L_start = (df.pH == min_pH)
-        L_peak = (df.pH == max_pH)
-        
-        #Selecting datenum using logical
-        start_spring_bloom = df.datenum[L_start]
-        peak_spring_bloom = df.datenum[L_peak]
+        #Average spm
+        L_month = (df.datenum > mdates.datestr2num('{}-03-01'.format(year))) & (df.datenum < mdates.datestr2num('{}-05-01'.format(year)))
+        spm = df_L_year[L_month].spm.mean()
         
         #Interpolate between min and max pH
         dpH = np.linspace(min_pH, max_pH, num = len(df_L_year))
@@ -75,11 +75,11 @@ for stationcode in northsea.station_code:
         # ax.text(0, 0, f"Pearson coefficient = {pearson_coef}")
         
         #Formatting
-        ax.set_title(f"{stationcode} {year}")
-        ax.set_xlabel('\u0394' + 'pH')
-        ax.set_ylabel('SPM')
-        ax2.set_ylabel('Chlorophyll')
-        fig.legend(loc='upper right', bbox_to_anchor=(1.25, 0.55))
+        # ax.set_title(f"{stationcode} {year}")
+        # ax.set_xlabel('\u0394' + 'pH')
+        # ax.set_ylabel('SPM')
+        # ax2.set_ylabel('Chlorophyll')
+        # fig.legend(loc='upper right', bbox_to_anchor=(1.25, 0.55))
        
         #Saving
         #plt.savefig(f"figures/{stationcode} {year}.png")
