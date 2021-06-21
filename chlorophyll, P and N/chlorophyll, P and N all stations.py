@@ -4,74 +4,72 @@ from matplotlib import pyplot as plt
 from scipy import stats
 import pandas as pd
 import matplotlib.dates as mdates
+from datetime import datetime
 
 northsea = pd.read_csv(
     "C:/Users/hanna/Documents/GitHub/pH-North-Sea/Maps/data/coordinates_stations.csv")
 
-stationcodes = [
-    "ZOUTKPLZGT",
-    "WALCRN70",
-    "WALCRN20",
-    "TERSLG50",
-    "TERSLG175",
-    "TERSLG135",
-    "TERSLG10",
-    "TERSLG100",
-    "SCHOUWN10",
-    "NOORDWK70",
-    "NOORDWK20",
-    "NOORDWK10",
-    "GOERE6",
-    "DOOVBWT",
-    "DANTZGT"]
+#On to offshore
+# stationcodes = [
+#     "SCHOUWN1",
+#     "SCHOUWN4",
+#     "SCHOUWN10",
+#     "SCHOUWN20",
+#     "SCHOUWN30",
+#     "SCHOUWN50",
+#     "SCHOUWN70"]
+
+#Over time
+# stationcodes = [    
+#     "ZOUTKPLZGT",
+#     "WALCRN20",
+#     "NOORDWK10"]    
+
 #CHOOSE VARIABLES
 #(+ _irregular, _seasonal or _trend, or datenum for time)
-var1 = "phosphate_trend"
-var2 = "tn_trend"
-var3 = "chlorophyll_trend"
-var4 = "pH_trend"
+var1 = "phosphate_seasonal"
+var2 = "tn_seasonal"
+var3 = "chlorophyll_seasonal"
+var4 = "pH_seasonal"
 
 startyear = '1975'
-endyear = '2020'
+endyear = '1985'
 
-#for stationcode in northsea.station_code:
-for stationcode in stationcodes:
+for stationcode in northsea.station_code:
+#for stationcode in stationcodes:
     filename = "C:/Users/hanna/Documents/GitHub/rws-the-olden-days/data/x13/"+ stationcode.upper() + ".parquet"
     df = pq.read_table(source=filename).to_pandas()
-
+    df['datetime'] = mdates.num2date(df.datenum)
     L = ((df.datenum > mdates.datestr2num('{}-01-01'.format(startyear))) & (df.datenum < mdates.datestr2num('{}-01-01'.format(endyear))))
     x=df[L]
     fig, ax = plt.subplots(3, dpi=300)
-    ax[0].plot(x.index, x[var1], c='xkcd:royal blue', label='Phosphate')
+    ax[0].plot(x.datetime, x[var1], c='xkcd:royal blue', label='Phosphate')
     ax[0].set_ylabel('Phosphate')
-    ax2=ax[0].twinx()
-    ax2.plot(x.index, x[var2], c='xkcd:electric pink', label='TN')
+    ax2 = ax[0].twinx()
+    ax2.plot(x.datetime, x[var2], c='xkcd:electric pink', label='TN')
     ax2.set_ylabel('TN')
-    ax[1].plot(x.index, x[var3], c='xkcd:green', label='Chlorophyll')
-    #ax[1].set_ylabel('Chlorophyll')
-    ax[2].plot(x.index, x[var4], c='xkcd:light red', label ='pH')
-    #ax[2].set_ylabel('pH')
+    ax[1].plot(x.datetime, x[var4], c='xkcd:strawberry')
+    ax[2].plot(x.datetime, x[var3], c='xkcd:green')
+    ax[1].set_ylabel('pH')
+    ax[2].set_ylabel('Chlorophyll')
     ax[2].set_xlabel('Years')
     
-    ax[0].tick_params(
-        axis='x',
-        which='both',
-        bottom=False,
-        top=False,
-        labelbottom=False)
-    ax[1].tick_params(
-        axis='x',
-        which='both',
-        bottom=False,
-        top=False,
-        labelbottom=False)
-    ax[0].grid(axis='x')
-    ax[0].set_xlim([startyear, endyear])
-    ax[1].grid(axis='x')
-    ax[1].set_xlim([startyear, endyear])
-    ax[2].grid(axis='x')
-    ax[2].set_xlim([startyear, endyear])
+    for i in [0, 1]:
+        ax[i].tick_params(
+            axis='x',
+            which='both',
+            bottom=False,
+            top=False,
+            labelbottom=False)
+
+    for i in [0, 1, 2]:
+        ax[i].xaxis.get_ticklocs(minor=True)
+        ax[i].minorticks_on()
+        ax[i].grid(axis='both')
+        ax[i].grid(axis='both', which='minor', linestyle=':', linewidth='0.5')
+        ax[i].set_xlim([datetime(1975, 1, 1), datetime(1985, 1, 1)])
+        
     fig.suptitle(stationcode.upper() + ' ' + startyear + '-' + endyear)
-    fig.legend(loc='upper right', bbox_to_anchor=(1.15, 0.6))
-    fig.savefig("figures/trend/" + stationcode + '_' + startyear + '-' + endyear +"_nutrients_chlorophyll_pH"  + ".png",
+    fig.legend(loc='upper right', bbox_to_anchor=(0.96, 1.03))
+    fig.savefig("figures/seasonal/1975-1985/" + stationcode + '_' + startyear + '-' + endyear +"_nutrients_chlorophyll_pH"  + ".png",
                 bbox_inches='tight')

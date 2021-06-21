@@ -4,7 +4,7 @@ from matplotlib import pyplot as plt
 import numpy as np
 from datetime import datetime
 from scipy import interpolate, stats
-from scipy.stats.stats import pearsonr
+from scipy.stats.stats import pearsonr, spearmanr
 import matplotlib.dates as mdates
 
 northsea = pd.read_csv(
@@ -55,8 +55,8 @@ stationcodes = [
     'WALCRN50'
     ]
 #Loop through station data files
-#for stationcode in stationcodes:
-for stationcode in northsea.station_code:    
+for stationcode in stationcodes:
+#for stationcode in northsea.station_code:    
     #Read station specific files
     filename = "C:/Users/hanna/Documents/GitHub/rws-the-olden-days/data/x13/"+ stationcode + ".parquet"
     df = pq.read_table(source=filename).to_pandas()
@@ -136,9 +136,14 @@ ax.scatter(df2.spm, df2.dpH, s=60, marker='o', c='royalblue')
 L_pearson = df2.spm.notnull()
 df2_L_pearson = df2.spm[L_pearson]
 dpH_pearson = np.linspace(df2.dpH.min(), df2.dpH.max(), num = len(df2_L_pearson))
-pearson_coef, p_value = stats.pearsonr(dpH_pearson, df2_L_pearson)
-ax.text(30, 0, f"Pearson coefficient = {pearson_coef}")
-            
+# pearson_coef, p_value = stats.pearsonr(dpH_pearson, df2_L_pearson)
+# ax.text(30, 0, f"Pearson coefficient = {pearson_coef}")
+           
+# Spearman
+corr, _ = spearmanr(dpH_pearson, df2_L_pearson)
+ax.set_xscale("log")
+ax.text(20, 0, 'Spearmans correlation: %.3f' % corr)
+ 
 #Formatting
 ax.set_title('\u0394' + 'pH vs SPM')
 ax.set_xlabel('SPM')
@@ -146,7 +151,7 @@ ax.set_ylabel('\u0394' + 'pH')
 #fig.legend(loc='upper right', bbox_to_anchor=(1.25, 0.55))
    
 #Saving
-plt.savefig("figures/dpH vs spm all stations per year.png")
+#plt.savefig("figures/dpH vs spm not all stations per year.png")
 
 #%%
 #Plot all chlorophyll vs dpH data
@@ -157,9 +162,14 @@ ax.scatter(df2.chlorophyll, df2.dpH, s=60, marker='o', c='seagreen')
 L_pearson = df2.chlorophyll.notnull()
 df2_L_pearson = df2.chlorophyll[L_pearson]
 dpH_pearson = np.linspace(df2.dpH.min(), df2.dpH.max(), num = len(df2_L_pearson))
-pearson_coef, p_value = stats.pearsonr(dpH_pearson, df2_L_pearson)
-ax.text(10, 0, f"Pearson coefficient = {pearson_coef}")
-            
+# pearson_coef, p_value = stats.pearsonr(dpH_pearson, df2_L_pearson)
+# ax.text(10, 0, f"Pearson coefficient = {pearson_coef}")
+
+# Spearman
+corr, _ = spearmanr(dpH_pearson, df2_L_pearson)
+ax.set_xscale("log")
+ax.text(3.5, 0, 'Spearmans correlation: %.3f' % corr)
+
 #Formatting
 ax.set_title('\u0394' + 'pH vs chlorophyll')
 ax.set_xlabel('chlorophyll')
@@ -167,4 +177,4 @@ ax.set_ylabel('\u0394' + 'pH')
 #fig.legend(loc='upper right', bbox_to_anchor=(1.25, 0.55))
    
 #Saving
-plt.savefig("figures/dpH vs chlorophyll all stations per year.png")
+#plt.savefig("figures/dpH vs chlorophyll not all stations per year.png")

@@ -2,6 +2,7 @@ import pandas as pd
 from matplotlib import pyplot as plt
 import numpy as np
 import matplotlib.dates as mdates
+from scipy import interpolate
 
 rws_file = 'C:/Users/hanna/Documents/GitHub/rws-the-olden-days/data/old_rws_data/rws_compilation.parquet'
 rws_all = pd.read_parquet(rws_file, engine='auto')
@@ -9,10 +10,10 @@ rws_all = pd.read_parquet(rws_file, engine='auto')
 #%%
 #Choose stations
 #All
-#rws = rws_all
+rws = rws_all
 
 #Wadden Sea
-rws = rws_all.loc[["BLAUWSOT", "DANTZGT", "EILDBG", 'HOLWDBG', 'MALZN', 'VLIESZD', 'WESTMP', 'ZOUTKPLZGT', 'ZUIDOLWNOT']]
+#rws = rws_all.loc[["BLAUWSOT", "DANTZGT", "EILDBG", 'HOLWDBG', 'MALZN', 'VLIESZD', 'WESTMP', 'ZOUTKPLZGT', 'ZUIDOLWNOT', 'DOOVBWT]]
 
 #Offshore, >=50km
 #rws = rws_all.loc[["CALLOG50", "CALLOG70", "EGMAZE50", "EGMAZE70", "GOERE50", "GOERE70", "NOORDWK50", "NOORDWK70", "ROTTMPT50", "ROTTMPT70", "ROTTMPT100", "SCHOUWN50", "SCHOUWN70", "TERHDE70", "TERSLG50", "TERSLG70", "TERSLG100", "TERSLG135", "TERSLG175", "WALCRN50", "WALCRN70"]]
@@ -46,19 +47,31 @@ ax.set_title('Wadden Sea spm concentrations over time (monthly averages)')
 fig, ax = plt.subplots(dpi=300)
 ax.scatter(x = grouped_month.index, y = grouped_month.pH, s=0)
 
-interp_linear = interpolate.interp1d(grouped_month.datenum, grouped_month.pH, kind='linear')
-interp_spline = interpolate.UnivariateSpline(grouped_month.datenum, grouped_month.pH, s = 1000)
+#Create logical to ignore nan pH values
+L = ~np.isnan(grouped_month.pH)
+gmL_pH = grouped_month.pH[L]
+gmL_datenum = grouped_month.datenum[L]
 
-datenum_interp = np.linspace(np.min(grouped_month.datenum), np.max(grouped_month.datenum), num = 800)
-pH_linear = interp_linear(datenum_interp)
-pH_spline = interp_spline(datenum_interp)
+#Create functions (to create functions)
+#interp_linear = interpolate.interp1d(grouped_month.datenum, grouped_month.pH, kind='linear')
+#interp_spline = interpolate.UnivariateSpline(grouped_month.datenum, grouped_month.pH, s = 1000)
+interp_pchip = interpolate.PchipInterpolator(gmL_datenum, gmL_pH)
 
-ax.plot(datenum_interp, pH_linear)
-ax.plot(datenum_interp, pH_spline)
+#Interpolate datenum (can change length to length pH)
+datenum_interp = np.linspace(np.min(gmL_datenum), np.max(gmL_datenum), num = 1000)
+
+#pH_linear = interp_linear(datenum_interp)
+#pH_spline = interp_spline(datenum_interp)
+pH_pchip = interp_pchip(datenum_interp)
+
+#ax.plot(datenum_interp, pH_linear, c='black')
+#ax.plot(datenum_interp, pH_spline)
+ax.plot(datenum_interp, pH_pchip, c='purple')
 ax.set_xlabel('Year')
 ax.set_ylabel('pH')
-ax.set_title('North Sea pH over time (annual averages)')
+#ax.set_title('pH over time (annual averages)')
 
+fig.savefig("pH_trend/figures/ONSHORE_pH_pchip.png")
 #%% chlorophyll
 chlorophyll_years = rws.xs['1980-01-01' : '2016-01-01', 'ymd']
 
