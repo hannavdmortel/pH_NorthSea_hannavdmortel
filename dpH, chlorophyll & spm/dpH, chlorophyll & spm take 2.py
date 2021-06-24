@@ -129,8 +129,8 @@ df2 = pd.DataFrame(data, columns = ['station', 'year', 'dpH', 'spm', 'chlorophyl
 
 #%%
 #Plot all spm vs dpH data
-fig, ax = plt.subplots(dpi=300)
-ax.scatter(df2.spm, df2.dpH, s=60, marker='o', c='royalblue')
+fig, (ax1, ax2) = plt.subplots(figsize = (12, 4), ncols=2,  dpi=300)
+ax1.scatter(df2.spm, df2.dpH, s=60, marker='o', c='royalblue', alpha=0.4, edgecolor='none')
 
 #Pearson 
 L_pearson = df2.spm.notnull()
@@ -141,22 +141,21 @@ dpH_pearson = np.linspace(df2.dpH.min(), df2.dpH.max(), num = len(df2_L_pearson)
            
 # Spearman
 corr, _ = spearmanr(dpH_pearson, df2_L_pearson)
-ax.set_xscale("log")
-ax.text(20, 0, 'Spearmans correlation: %.3f' % corr)
+ax1.set_xscale("log")
+ax1.text(15, 2.3, 'Spearmans correlation: %.3f' % corr)
  
 #Formatting
-ax.set_title('\u0394' + 'pH vs SPM')
-ax.set_xlabel('SPM')
-ax.set_ylabel('\u0394' + 'pH')
+ax1.set_title('\u0394' + 'pH vs SPM')
+ax1.set_xlabel('SPM')
+ax1.set_ylabel('\u0394' + 'pH')
 #fig.legend(loc='upper right', bbox_to_anchor=(1.25, 0.55))
    
 #Saving
 #plt.savefig("figures/dpH vs spm not all stations per year.png")
 
-#%%
+
 #Plot all chlorophyll vs dpH data
-fig, ax = plt.subplots(dpi=300)
-ax.scatter(df2.chlorophyll, df2.dpH, s=60, marker='o', c='seagreen')
+ax2.scatter(df2.chlorophyll, df2.dpH, s=60, marker='o', c='seagreen', alpha=0.4, edgecolor='none')
 
 #Pearson 
 L_pearson = df2.chlorophyll.notnull()
@@ -167,14 +166,14 @@ dpH_pearson = np.linspace(df2.dpH.min(), df2.dpH.max(), num = len(df2_L_pearson)
 
 # Spearman
 corr, _ = spearmanr(dpH_pearson, df2_L_pearson)
-ax.set_xscale("log")
-ax.text(3.5, 0, 'Spearmans correlation: %.3f' % corr)
+ax2.set_xscale("log")
+ax2.text(2.8, 2.3, 'Spearmans correlation: %.3f' % corr)
 
 #Formatting
-ax.set_title('\u0394' + 'pH vs chlorophyll')
-ax.set_xlabel('chlorophyll')
-ax.set_ylabel('\u0394' + 'pH')
+ax2.set_title('\u0394' + 'pH vs chlorophyll')
+ax2.set_xlabel('chlorophyll')
+ax2.set_ylabel('\u0394' + 'pH')
 #fig.legend(loc='upper right', bbox_to_anchor=(1.25, 0.55))
    
 #Saving
-#plt.savefig("figures/dpH vs chlorophyll not all stations per year.png")
+plt.savefig("figures/dpH vs chlorophyll BOTH.png")
