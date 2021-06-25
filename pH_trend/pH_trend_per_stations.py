@@ -136,7 +136,7 @@ grouped5 = df5.groupby('YEAR').mean()
 fig, ax = plt.subplots(4, figsize=(4, 5), dpi=300)
 
 ax[0].scatter(df1.YEAR, df1.pH, alpha=0.2, s=10, c='grey', edgecolor='none')
-ax[0].plot(grouped1.index, grouped1.pH_trend, c='xkcd:pink purple', linewidth=2.5)
+ax[0].plot(grouped1.index, grouped1.pH_trend, c='xkcd:light orange', linewidth=2.5)
 
 ax[1].scatter(df2.YEAR, df2.pH, alpha=0.2, s=10, c='grey', edgecolor='none')
 ax[1].plot(grouped2.index, grouped2.pH_trend, c='royalblue', linewidth=2.5)
