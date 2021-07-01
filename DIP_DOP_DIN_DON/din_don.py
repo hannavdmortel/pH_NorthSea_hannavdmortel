@@ -3,6 +3,7 @@ import pyarrow.parquet as pq
 from matplotlib import pyplot as plt
 from scipy import interpolate, stats
 import pandas as pd
+import seaborn as sns
 import matplotlib.dates as mdates
 import matplotlib.patches as mpatches
 import matplotlib.ticker as ticker
@@ -16,8 +17,8 @@ fig, axs = plt.subplots(2, 2, figsize=(6,7), dpi=300)
 
 locations = {
     1: 'WaddenSea',
-    2: 'Nearshore1',
-    3: 'Nearshore2',
+    2: 'Nearshore',
+    3: 'Intermediate',
     4: 'Offshore'}
 
 #Choose time range
@@ -70,11 +71,17 @@ var2_pchip = interp_pchip2(months_interp)
 interp_pchip3 = interpolate.PchipInterpolator(monthly_avg_pH.index, monthly_avg_pH)
 pH_pchip = interp_pchip3(months_interp)
 
-#Scatter all raw data minus outliers
-axs[0,0].scatter(months, xL[var1], 
-           alpha=0.1, edgecolor='none', c='royalblue', s=15)
-axs[0,0].scatter(months, xL[var2], 
-           alpha=0.1, edgecolor='none', c='xkcd:pink', s=15)
+#Scatter all raw data minus outliers, with jitter
+sns.regplot(x=months, y=xL[var1], ax=axs[0,0], fit_reg = False, 
+            x_jitter=0.2, y_jitter=0.1, 
+            color='royalblue',
+            scatter_kws={'alpha':0.12, 's':15, 'edgecolor':'none'}
+            ).set(xlabel=None, ylabel=None)
+sns.regplot(x=months, y=xL[var2], ax=axs[0,0], fit_reg = False, 
+            x_jitter=0.2, y_jitter=0.1, 
+            color='xkcd:pink', 
+            scatter_kws={'alpha':0.12, 's':15, 'edgecolor':'none'}
+            ).set(xlabel=None, ylabel=None)
 
 #Plot interpolated phosphate and tp trend
 axs[0,0].plot(months_interp, var1_pchip, 
@@ -89,7 +96,7 @@ ax2.plot(months_interp, pH_pchip,
         label='pH', zorder=5, c='grey', linewidth=2, linestyle='--')
 
 #Formatting
-axs[0,0].set_ylabel('[N]', fontsize=8)
+axs[0,0].set_ylabel('N (\u03BCM)', fontsize=8)
 axs[0,0].set_ylim(bottom=0, top=130)
 ax2.set_ylim(7.8, 8.45)
 ax2.yaxis.set_major_formatter(plt.NullFormatter())
@@ -101,7 +108,7 @@ axs[0,0].set_title('Wadden Sea', fontsize=10)
 #%% Nearshore <20km
 location = locations[2]
 
-if location == 'Nearshore1':
+if location == 'Nearshore':
     station_codes = ["CALLOG4", "CALLOG10", "EGMAZE4", "EGMAZE10", "GOERE6", "GOERE10", "NOORDWK4", "NOORDWK10", "ROTTMPT20", "SCHOUWN1", "SCHOUWN4", "SCHOUWN10", "TERSLG10", "WALCRN4", "WALCRN10"]
 
 for stationcode in station_codes:
@@ -138,11 +145,17 @@ var2_pchip = interp_pchip2(months_interp)
 interp_pchip3 = interpolate.PchipInterpolator(monthly_avg_pH.index, monthly_avg_pH)
 pH_pchip = interp_pchip3(months_interp)
 
-#Scatter all raw data minus outliers
-axs[0,1].scatter(months, xL[var1], 
-           alpha=0.1, edgecolor='none', c='royalblue', s=15)
-axs[0,1].scatter(months, xL[var2], 
-           alpha=0.1, edgecolor='none', c='xkcd:pink', s=15)
+#Scatter all raw data minus outliers, with jitter
+sns.regplot(x=months, y=xL[var1], ax=axs[0,1], fit_reg = False, 
+            x_jitter=0.2, y_jitter=0.1, 
+            color='royalblue',
+            scatter_kws={'alpha':0.12, 's':15, 'edgecolor':'none'}
+            ).set(xlabel=None, ylabel=None)
+sns.regplot(x=months, y=xL[var2], ax=axs[0,1], fit_reg = False, 
+            x_jitter=0.2, y_jitter=0.1, 
+            color='xkcd:pink', 
+            scatter_kws={'alpha':0.12, 's':15, 'edgecolor':'none'}
+            ).set(xlabel=None, ylabel=None)
 
 #Plot interpolated phosphate and tp trend
 axs[0,1].plot(months_interp, var1_pchip, 
@@ -171,7 +184,7 @@ axs[0,1].set_title('Nearshore (<20 km)', fontsize=10)
 #%% Nearshore 20-50 km
 location = locations[3]
 
-if location == 'Nearshore2':
+if location == 'Intermediate':
     station_codes = ["CALLOG30", "CALLOG50", "EGMAZE20", "EGMAZE30", "EGMAZE50", "GOERE20", "GOERE30", "GOERE50", "NOORDWK20", "NOORDWK30", "NOORDWK50", "ROTTMPT30", "ROTTMPT50", "SCHOUWN20", "SCHOUWN30", "TERSLG30",  "TERSLG50", "WALCRN20", "WALCRN30", "WALCRN50"]
 
 for stationcode in station_codes:
@@ -208,11 +221,17 @@ var2_pchip = interp_pchip2(months_interp)
 interp_pchip3 = interpolate.PchipInterpolator(monthly_avg_pH.index, monthly_avg_pH)
 pH_pchip = interp_pchip3(months_interp)
 
-#Scatter all raw data minus outliers
-axs[1,0].scatter(months, xL[var1], 
-           alpha=0.1, edgecolor='none', c='royalblue', s=15)
-axs[1,0].scatter(months, xL[var2], 
-           alpha=0.1, edgecolor='none', c='xkcd:pink', s=15)
+#Scatter all raw data minus outliers, with jitter
+sns.regplot(x=months, y=xL[var1], ax=axs[1,0], fit_reg = False, 
+            x_jitter=0.2, y_jitter=0.1, 
+            color='royalblue',
+            scatter_kws={'alpha':0.12, 's':15, 'edgecolor':'none'}
+            ).set(xlabel=None, ylabel=None)
+sns.regplot(x=months, y=xL[var2], ax=axs[1,0], fit_reg = False, 
+            x_jitter=0.2, y_jitter=0.1, 
+            color='xkcd:pink', 
+            scatter_kws={'alpha':0.12, 's':15, 'edgecolor':'none'}
+            ).set(xlabel=None, ylabel=None)
 
 #Plot interpolated phosphate and tp trend
 axs[1,0].plot(months_interp, var1_pchip, 
@@ -227,7 +246,7 @@ ax2.plot(months_interp, pH_pchip,
         zorder=5, c='grey', linewidth=2, linestyle='--')
 
 #Formatting
-axs[1,0].set_ylabel('[N]', fontsize=8)
+axs[1,0].set_ylabel('N (\u03BCM)', fontsize=8)
 axs[1,0].set_ylim(bottom=0, top=30)
 ax2.set_ylim(7.8, 8.45)
 ax2.yaxis.set_major_formatter(plt.NullFormatter())
@@ -275,11 +294,18 @@ var2_pchip = interp_pchip2(months_interp)
 interp_pchip3 = interpolate.PchipInterpolator(monthly_avg_pH.index, monthly_avg_pH)
 pH_pchip = interp_pchip3(months_interp)
 
-#Scatter all raw data minus outliers
-axs[1,1].scatter(months, xL[var1], 
-           alpha=0.1, edgecolor='none', c='royalblue', s=15, zorder=2)
-axs[1,1].scatter(months, xL[var2], 
-           alpha=0.1, edgecolor='none', c='xkcd:pink', s=15, zorder=2)
+
+#Scatter all raw data minus outliers, with jitter
+sns.regplot(x=months, y=xL[var1], ax=axs[1,1], fit_reg = False, 
+            x_jitter=0.2, y_jitter=0.1, 
+            color='royalblue',
+            scatter_kws={'alpha':0.12, 's':15, 'edgecolor':'none'}
+            ).set(xlabel=None, ylabel=None)
+sns.regplot(x=months, y=xL[var2], ax=axs[1,1], fit_reg = False, 
+            x_jitter=0.2, y_jitter=0.1, 
+            color='xkcd:pink', 
+            scatter_kws={'alpha':0.12, 's':15, 'edgecolor':'none'}
+            ).set(xlabel=None, ylabel=None)
 
 #Plot interpolated phosphate and tp trend
 axs[1,1].plot(months_interp, var1_pchip, 
@@ -311,7 +337,7 @@ fig.suptitle('Monthly averaged DIN and TN', fontsize=12, x=0.36, y=0.96)
 blue_patch = mpatches.Patch(color='royalblue', label='DIN')
 pink_patch = mpatches.Patch(color='xkcd:pink', label='TN')
 grey_patch = mpatches.Patch(color='xkcd:grey', label= 'pH')
-pinkpurple_patch = mpatches.Patch(color='xkcd:pinkish purple', label= 'TN - DIN')
+pinkpurple_patch = mpatches.Patch(color='xkcd:pinkish purple', label= 'ON')
 
 plt.legend(handles=[blue_patch, pink_patch, grey_patch, pinkpurple_patch], 
            bbox_to_anchor=(1.035, 2.5), fontsize=8, ncol=2)
