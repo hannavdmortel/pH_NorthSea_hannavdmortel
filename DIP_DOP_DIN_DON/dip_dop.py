@@ -101,7 +101,7 @@ ax2.plot(months_interp, pH_pchip,
         label='pH', zorder=5, c='grey', linewidth=2, linestyle='--')
 
 #Formatting
-axs[0,0].set_ylabel('P (\u03BCM)', fontsize=8)
+axs[0,0].set_ylabel('P (\u03BCmol $\mathregular{L^{-1}}$)', fontsize=8)
 axs[0,0].set_ylim(bottom=0, top=6)
 ax2.set_ylim(7.8, 8.45)
 ax2.yaxis.set_major_formatter(plt.NullFormatter())
@@ -246,7 +246,7 @@ ax2.plot(months_interp, pH_pchip,
         label='pH', zorder=5, c='grey', linewidth=2, linestyle='--')
 
 #Formatting
-axs[1,0].set_ylabel('P (\u03BCM)', fontsize=8)
+axs[1,0].set_ylabel('P (\u03BCmol $\mathregular{L^{-1}}$)', fontsize=8)
 axs[1,0].set_ylim(bottom=0, top=1.7)
 ax2.set_ylim(7.8, 8.45)
 ax2.yaxis.set_major_formatter(plt.NullFormatter())
@@ -328,8 +328,8 @@ axs[1,1].tick_params(axis='y', labelsize=7)
 axs[1,1].set_title('Offshore (>70 km)', fontsize=10)
 
 #%% Formatting and plotting
-fig.suptitle('Monthly averaged DIP and TP', 
-             fontsize=12, x=0.36, y=0.96) 
+fig.suptitle('Monthly averaged P surface waters \n 1973-2019', 
+             fontsize=12, x=0.36, y=0.97) 
 
 #Create legend
 teal_patch = mpatches.Patch(color='xkcd:teal', label='DIP')

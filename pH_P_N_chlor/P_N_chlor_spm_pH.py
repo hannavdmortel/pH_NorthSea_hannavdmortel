@@ -7,36 +7,33 @@ import matplotlib.dates as mdates
 from datetime import datetime
 import matplotlib.patches as mpatches
 import matplotlib.ticker as ticker
+from matplotlib.ticker import MaxNLocator
 
 x=pd.DataFrame()
 
 locations = {
     1: 'WaddenSea',
-    2: 'Nearshore1',
-    3: 'Nearshore2',
+    2: 'Nearshore',
+    3: 'Intermediate',
     4: 'Offshore'}
 
 #Choose years
 startyear = '2010'
 endyear = '2020'
 
-#Choose variables for Redfield calculation
-P = 'phosphate'
-N = 'DIN'
-
 #Choose location
-location = locations[1]
+location = locations[2]
     
 #Wadden Sea
 if location == 'WaddenSea':
     station_codes = ["BLAUWSOT", "DANTZGT", "EILDBG", 'HOLWDBG', 'MALZN', 'VLIESZD', 'WESTMP', 'ZOUTKPLZGT', 'ZUIDOLWNOT', 'DOOVBWT']
 
 #Nearshore <20km
-if location == 'Nearshore1':
+if location == 'Nearshore':
     station_codes = ["CALLOG4", "CALLOG10", "EGMAZE4", "EGMAZE10", "GOERE6", "GOERE10", "NOORDWK4", "NOORDWK10", "ROTTMPT20", "SCHOUWN1", "SCHOUWN4", "SCHOUWN10", "TERSLG10", "WALCRN4", "WALCRN10"]
 
 #Nearshore 20-50 km
-if location == 'Nearshore2':
+if location == 'Intermediate':
     station_codes = ["CALLOG30", "CALLOG50", "EGMAZE20", "EGMAZE30", "EGMAZE50", "GOERE20", "GOERE30", "GOERE50", "NOORDWK20", "NOORDWK30", "NOORDWK50", "ROTTMPT30", "ROTTMPT50", "SCHOUWN20", "SCHOUWN30", "TERSLG30",  "TERSLG50", "WALCRN20", "WALCRN30", "WALCRN50"]
 
 #Offshore 70+ km
@@ -78,6 +75,16 @@ xL['z_score_var2'] = stats.zscore(xL[var2])
 L2 = (xL['z_score_var1'].abs()<=2) & (xL['z_score_var2'].abs()<=2)
 xL = xL[L2]
 
+# xL['date'] = mdates.num2date(xL.datenum)
+# LRR = xL['date'].dt.month.between(1,6)
+# xRR = xL[LRR]
+
+# #Calculating RR of reproduction
+# RR = (xRR[var2].max()-xL[var2].min())/(xRR[var1].max()-xL[var1].min())
+
+# #Plotting RR on top
+# axs[0,0].set_title('DIN:DIP = %.0f' % RR, fontsize=8, loc='right', pad=1)
+
 #Monthly averages
 months = xL.index.month
 monthly_avg_var1 = xL.groupby(months)[var1].mean()
@@ -111,6 +118,12 @@ var5_pchip = interp_pchip5(months_interp)
 # axs[1,1].scatter(months, xL[var5], 
 #            alpha=0.1, edgecolor='none', c='xkcd:teal green', s=15)
 
+#Calculating RR of reproduction
+RR = (var2_pchip.max()-var2_pchip.min())/(var1_pchip.max()-var1_pchip.min())
+
+#Plotting RR on top
+axs[0,0].set_title('DIN:DIP = %.0f' % RR, fontsize=8, loc='right', pad=1)
+
 #Plot interpolated trends
 axs[0,0].plot(months_interp, var1_pchip, 
         zorder=10, c='xkcd:light orange', linewidth=2)
@@ -124,15 +137,21 @@ axs[1,1].plot(months_interp, var5_pchip,
         zorder=10, c='xkcd:coral', linewidth=2)
 
 #Formatting
-axs[0,0].set_ylabel('[P]', fontsize=8)
-ax2.set_ylabel('[N]', fontsize=8)
+axs[0,0].set_ylabel('P (\u03BCmol $\mathregular{L^{-1}}$)', fontsize=8)
+ax2.set_ylabel('N (\u03BCmol $\mathregular{L^{-1}}$)', fontsize=8)
+axs[0,0].set_ylim(bottom=0, top=1.1*var1_pchip.max())
 axs[0,0].tick_params(axis='y', labelsize=7)
+#ax2.yaxis.set_major_locator(ticker.LinearLocator(5))
+
 ax2.tick_params(axis='y', labelsize=7)
+ax2.set_ylim(bottom=0, top=1.1*var2_pchip.max())
 axs[0,0].set_xticks(np.arange(0, 11, 2))
 axs[0,0].set_xticklabels([' ', 'Feb', 'April', 'June', 'Aug', 'Oct'], fontsize=7)
+#ax2.yaxis.set_major_locator(ticker.LinearLocator(5))
 
-axs[0,1].set_ylabel('Chlorophyll', fontsize=8)
+axs[0,1].set_ylabel('Chl (\u03BC$\mathregular{g^{-L}}$)', fontsize=8)
 axs[0,1].tick_params(axis='y', labelsize=7)
+axs[0,1].set_ylim(bottom=0)
 axs[0,1].set_xticks(np.arange(0, 11, 2))
 axs[0,1].set_xticklabels([' ', 'Feb', 'April', 'June', 'Aug', 'Oct'], fontsize=7)
 axs[0,1].yaxis.set_label_position("right")
@@ -140,52 +159,42 @@ axs[0,1].yaxis.tick_right()
 
 axs[1,0].set_ylabel('pH', fontsize=8)
 axs[1,0].tick_params(axis='y', labelsize=7)
+axs[1,0].set_ylim(bottom=7.71, top=8.5)
 axs[1,0].set_xticks(np.arange(0, 11, 2))
 axs[1,0].set_xticklabels([' ', 'Feb', 'April', 'June', 'Aug', 'Oct'], fontsize=7)
 
-axs[1,1].set_ylabel('[SPM]', fontsize=8)
+axs[1,1].set_ylabel('SPM ($\mathregular{mg^{-L}}$)', fontsize=8)
 axs[1,1].tick_params(axis='y', labelsize=7)
+axs[1,1].set_ylim(bottom=0)
 axs[1,1].set_xticks(np.arange(0, 11, 2))
 axs[1,1].set_xticklabels([' ', 'Feb', 'April', 'June', 'Aug', 'Oct'], fontsize=7)
 axs[1,1].yaxis.set_label_position("right")
 axs[1,1].yaxis.tick_right()
 
-#Removing nan & outliers for RR calculation
-L_RR = ~np.isnan(x[P]) & ~np.isnan(x[N])
-xRR = x[L_RR]
-xRR['z_score_P'] = stats.zscore(xRR[P])
-xRR['z_score_N'] = stats.zscore(xRR[N])
-L2_RR = (xRR['z_score_P'].abs()<=3) & (xRR['z_score_N'].abs()<=3)
-xL_RR = xRR[L2_RR]
-
-#Plotting RR on top
-RR = ((xL_RR[N]/xL_RR[P]).mean())
-axs[0,0].set_title('DIN:DIP = %.0f' % RR, fontsize=8, loc='right', pad=1)
-
 #Formatting
-fig.suptitle('Monthly averages Wadden Sea '+ startyear + '-' + endyear, fontsize=11, x=0.5, y=0.96)
+fig.suptitle('Monthly averages Nearshore (<20 km) '+ startyear + '-' + endyear, fontsize=11, x=0.5, y=0.96)
 fig.tight_layout()
 
 #Grid
 axs[0,0].set_xlim(1,12)
 axs[0,0].minorticks_on()
-axs[0,0].grid(axis='both')
-axs[0,0].grid(axis='both', which='minor', linestyle=':', linewidth='0.5')
+axs[0,0].grid(axis='x')
+axs[0,0].grid(axis='x', which='minor', linestyle=':', linewidth='0.5')
 
 axs[0,1].set_xlim(1,12)
 axs[0,1].minorticks_on()
-axs[0,1].grid(axis='both')
-axs[0,1].grid(axis='both', which='minor', linestyle=':', linewidth='0.5')     
+axs[0,1].grid(axis='x')
+axs[0,1].grid(axis='x', which='minor', linestyle=':', linewidth='0.5')     
 
 axs[1,0].set_xlim(1,12)
 axs[1,0].minorticks_on()
-axs[1,0].grid(axis='both')
-axs[1,0].grid(axis='both', which='minor', linestyle=':', linewidth='0.5')
+axs[1,0].grid(axis='x')
+axs[1,0].grid(axis='x', which='minor', linestyle=':', linewidth='0.5')
 
 axs[1,1].set_xlim(1,12)
 axs[1,1].minorticks_on()
-axs[1,1].grid(axis='both')
-axs[1,1].grid(axis='both', which='minor', linestyle=':', linewidth='0.5')
+axs[1,1].grid(axis='x')
+axs[1,1].grid(axis='x', which='minor', linestyle=':', linewidth='0.5')
 
 #Create legend
 patch1 = mpatches.Patch(color='xkcd:light orange', label='DIP')

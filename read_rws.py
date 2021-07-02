@@ -45,7 +45,7 @@ ax.set_title('Wadden Sea spm concentrations over time (monthly averages)')
 
 #%% pH
 fig, ax = plt.subplots(dpi=300)
-ax.scatter(x = grouped_month.index, y = grouped_month.pH, s=0)
+ax.scatter(x = grouped_month.index, y = grouped_month.pH, s=10)
 
 #Create logical to ignore nan pH values
 L = ~np.isnan(grouped_month.pH)
@@ -66,7 +66,7 @@ pH_pchip = interp_pchip(datenum_interp)
 
 #ax.plot(datenum_interp, pH_linear, c='black')
 #ax.plot(datenum_interp, pH_spline)
-ax.plot(datenum_interp, pH_pchip, c='purple')
+#ax.plot(datenum_interp, pH_pchip, c='purple')
 ax.set_xlabel('Year')
 ax.set_ylabel('pH')
 #ax.set_title('pH over time (annual averages)')
