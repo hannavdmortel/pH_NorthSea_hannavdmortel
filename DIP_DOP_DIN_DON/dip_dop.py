@@ -30,6 +30,9 @@ endyear = '2019'
 var1 = "phosphate"
 var2 = "tp"
 
+# fpath = "C:/Users/hanna/Documents/GitHub/"
+fpath = '/home/matthew/github/'
+
 #%% Wadden Sea
 #Choose location
 location = locations[1]
@@ -38,7 +41,7 @@ if location == 'WaddenSea':
     station_codes = ["BLAUWSOT", "DANTZGT", "EILDBG", 'HOLWDBG', 'MALZN', 'VLIESZD', 'WESTMP', 'ZOUTKPLZGT', 'ZUIDOLWNOT', 'DOOVBWT']
 
 for stationcode in station_codes:
-    filename = "C:/Users/hanna/Documents/GitHub/rws-the-olden-days/data/x13/"+ stationcode.upper() + ".parquet"
+    filename = fpath + "rws-the-olden-days/data/x13/"+ stationcode.upper() + ".parquet"
     df = pq.read_table(source=filename).to_pandas()
     L = ((df.datenum > mdates.datestr2num('{}-01-01'.format(startyear))) & (df.datenum < mdates.datestr2num('{}-01-01'.format(endyear))))
     dfL=df[L]
@@ -117,7 +120,7 @@ if location == 'Nearshore':
     station_codes = ["CALLOG4", "CALLOG10", "EGMAZE4", "EGMAZE10", "GOERE6", "GOERE10", "NOORDWK4", "NOORDWK10", "ROTTMPT20", "SCHOUWN1", "SCHOUWN4", "SCHOUWN10", "TERSLG10", "WALCRN4", "WALCRN10"]
 
 for stationcode in station_codes:
-    filename = "C:/Users/hanna/Documents/GitHub/rws-the-olden-days/data/x13/"+ stationcode.upper() + ".parquet"
+    filename = fpath + "rws-the-olden-days/data/x13/"+ stationcode.upper() + ".parquet"
     df = pq.read_table(source=filename).to_pandas()
     df['datetime'] = mdates.num2date(df.datenum)
     L = ((df.datenum > mdates.datestr2num('{}-01-01'.format(startyear))) & (df.datenum < mdates.datestr2num('{}-01-01'.format(endyear))))
@@ -190,7 +193,7 @@ if location == 'Intermediate':
     station_codes = ["CALLOG30", "CALLOG50", "EGMAZE20", "EGMAZE30", "EGMAZE50", "GOERE20", "GOERE30", "GOERE50", "NOORDWK20", "NOORDWK30", "NOORDWK50", "ROTTMPT30", "ROTTMPT50", "SCHOUWN20", "SCHOUWN30", "TERSLG30",  "TERSLG50", "WALCRN20", "WALCRN30", "WALCRN50"]
 
 for stationcode in station_codes:
-    filename = "C:/Users/hanna/Documents/GitHub/rws-the-olden-days/data/x13/"+ stationcode.upper() + ".parquet"
+    filename = fpath + "rws-the-olden-days/data/x13/"+ stationcode.upper() + ".parquet"
     df = pq.read_table(source=filename).to_pandas()
     df['datetime'] = mdates.num2date(df.datenum)
     L = ((df.datenum > mdates.datestr2num('{}-01-01'.format(startyear))) & (df.datenum < mdates.datestr2num('{}-01-01'.format(endyear))))
@@ -261,7 +264,7 @@ if location == 'Offshore':
     station_codes = ["CALLOG70", "EGMAZE70", "GOERE70", "NOORDWK70", "ROTTMPT70", "ROTTMPT100", "SCHOUWN50", "SCHOUWN70", "TERHDE70", "TERSLG70", "TERSLG100", "TERSLG135", "TERSLG175","WALCRN70"]
 
 for stationcode in station_codes:
-    filename = "C:/Users/hanna/Documents/GitHub/rws-the-olden-days/data/x13/"+ stationcode.upper() + ".parquet"
+    filename = fpath + "rws-the-olden-days/data/x13/"+ stationcode.upper() + ".parquet"
     df = pq.read_table(source=filename).to_pandas()
     L = ((df.datenum > mdates.datestr2num('{}-01-01'.format(startyear))) & (df.datenum < mdates.datestr2num('{}-01-01'.format(endyear))))
     dfL=df[L]
@@ -276,17 +279,18 @@ L2 = (xL['z_score_var1'].abs()<=2) & (xL['z_score_var2'].abs()<=2)
 xL0 = xL[L2]
 
 #For adding extra Jan on x-axis
-L_Jan = (xL0.index.month == 1)
-xL = xL0.append(xL0[L_Jan])
+xL0['months13'] = xL0.index.month.to_numpy()
+xL0_Jan = xL0[xL0.index.month == 1].copy()
+xL0_Jan['months13'] = 13
+xL0 = xL0.append(xL0_Jan)
 
 # #Create months list
-months = xL.index.month
-L3 = (months[len(xL1)]-months[len(xL0)::])
-Jan_13 = months[L3]
-months[Jan_13] = 13
+# L3 = (months[len(xL1)]-months[len(xL0)::])
+# Jan_13 = months[L3]
+# months[Jan_13] = 13
 
 #Monthly averages
-monthly_avg_var1 = xL.groupby(months)[var1].mean()
+monthly_avg_var1 = xL0.groupby('months13')[var1].mean()
 monthly_avg_var2 = xL.groupby(months)[var2].mean()
 monthly_avg_pH = xL.groupby(months)['pH'].mean()
 
