@@ -40,7 +40,6 @@ if location == 'WaddenSea':
 for stationcode in station_codes:
     filename = "C:/Users/hanna/Documents/GitHub/rws-the-olden-days/data/x13/"+ stationcode.upper() + ".parquet"
     df = pq.read_table(source=filename).to_pandas()
-    df['datetime'] = mdates.num2date(df.datenum)
     L = ((df.datenum > mdates.datestr2num('{}-01-01'.format(startyear))) & (df.datenum < mdates.datestr2num('{}-01-01'.format(endyear))))
     dfL=df[L]
     x1 = x1.append(dfL, ignore_index=False)
@@ -55,16 +54,17 @@ xL = xL[L2]
 
 #For adding extra Jan on x-axis
 L_Jan = (xL.index.month == 1)
-xL = xL.append(xL[L_Jan])
-#months = 
+xL1 = xL.append(xL[L_Jan])
 
 # #Create months list
-months = xL.index.month
+months = xL1.index.month
+L3 = months > len(xL)
+Jan_13 = months[L3] 
 
 #Monthly averages
-monthly_avg_var1 = xL.groupby(xL.index.month)[var1].mean()
-monthly_avg_var2 = xL.groupby(xL.index.month)[var2].mean()
-monthly_avg_pH = xL.groupby(xL.index.month)['pH'].mean()
+monthly_avg_var1 = xL1.groupby(xL1.index.month)[var1].mean()
+monthly_avg_var2 = xL1.groupby(xL1.index.month)[var2].mean()
+monthly_avg_pH = xL1.groupby(xL1.index.month)['pH'].mean()
 
 #Interpolation for smooth line
 months_interp = np.linspace(1, 12, num=100)
@@ -76,12 +76,12 @@ interp_pchip3 = interpolate.PchipInterpolator(monthly_avg_pH.index, monthly_avg_
 pH_pchip = interp_pchip3(months_interp)
 
 #Scatter all raw data minus outliers, with jitter
-sns.regplot(x=months, y=xL[var1], ax=axs[0,0], fit_reg = False, 
+sns.regplot(x=months, y=xL1[var1], ax=axs[0,0], fit_reg = False, 
             x_jitter=0.2, y_jitter=0.1, 
             color='xkcd:teal',
             scatter_kws={'alpha':0.12, 's':15, 'edgecolor':'none'}
             ).set(xlabel=None, ylabel=None)
-sns.regplot(x=months, y=xL[var2], ax=axs[0,0], fit_reg = False, 
+sns.regplot(x=months, y=xL1[var2], ax=axs[0,0], fit_reg = False, 
             x_jitter=0.2, y_jitter=0.1, 
             color='xkcd:light orange', 
             scatter_kws={'alpha':0.12, 's':15, 'edgecolor':'none'}
@@ -263,7 +263,6 @@ if location == 'Offshore':
 for stationcode in station_codes:
     filename = "C:/Users/hanna/Documents/GitHub/rws-the-olden-days/data/x13/"+ stationcode.upper() + ".parquet"
     df = pq.read_table(source=filename).to_pandas()
-    df['datetime'] = mdates.num2date(df.datenum)
     L = ((df.datenum > mdates.datestr2num('{}-01-01'.format(startyear))) & (df.datenum < mdates.datestr2num('{}-01-01'.format(endyear))))
     dfL=df[L]
     x4 = x4.append(dfL, ignore_index=False)
@@ -274,10 +273,19 @@ xL = x4[L]
 xL['z_score_var1'] = stats.zscore(xL[var1])
 xL['z_score_var2'] = stats.zscore(xL[var2])
 L2 = (xL['z_score_var1'].abs()<=2) & (xL['z_score_var2'].abs()<=2)
-xL = xL[L2]
+xL0 = xL[L2]
+
+#For adding extra Jan on x-axis
+L_Jan = (xL0.index.month == 1)
+xL = xL0.append(xL0[L_Jan])
+
+# #Create months list
+months = xL.index.month
+L3 = (months[len(xL1)]-months[len(xL0)::])
+Jan_13 = months[L3]
+months[Jan_13] = 13
 
 #Monthly averages
-months = xL.index.month
 monthly_avg_var1 = xL.groupby(months)[var1].mean()
 monthly_avg_var2 = xL.groupby(months)[var2].mean()
 monthly_avg_pH = xL.groupby(months)['pH'].mean()
