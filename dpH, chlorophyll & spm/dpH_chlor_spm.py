@@ -2,63 +2,50 @@ import pandas as pd
 import pyarrow.parquet as pq
 from matplotlib import pyplot as plt
 import numpy as np
-from datetime import datetime
-from scipy import interpolate, stats
-from scipy.stats.stats import pearsonr, spearmanr
+from scipy import stats
+from scipy.stats.stats import spearmanr
 import matplotlib.dates as mdates
+from matplotlib.ticker import (AutoMinorLocator)
 
-northsea = pd.read_csv(
-    "C:/Users/hanna/Documents/GitHub/pH-North-Sea/Maps/data/coordinates_stations.csv")
+
+fpath = "C:/Users/hanna/Documents/GitHub/"
 
 #%%
 #Create list
 data = []
 
+#Create figure
+fig, (ax1, ax2) = plt.subplots(figsize = (12, 4), ncols=2,  dpi=300)
+
 #List of stations without a negative seasonal correlation between spm & chlorophyll
 stationcodes = [
-    'ZUIDOLWNOT',
-    'EILDBG',
-    'HOLWDBG',
-    'WESTMP',
-    'VLIESZD',
-    'MALZN',
-    'ROTTMPT20',
-    'ROTTMPT30',
-    'TERSLG10',
-    'TERSLG30',
-    'TERSLG50',
-    'TERSLG70',
-    'TERSLG100',
-    'TERSLG135',
-    'TERSLG175',
-    'CALLOG10',
-    'CALLOG50',
-    'EGMAZE4',
+    'CALLOG30',
+    'DOOVBWT',
     'EGMAZE10',
     'EGMAZE20',
     'EGMAZE30',
     'EGMAZE50',
-    'EGMAZE70',
-    'NOORDWK4',
-    'NOORDWK10',
+    'GOERE30',
+    'GOERE70',
     'NOORDWK20',
     'NOORDWK30',
     'NOORDWK50',
     'NOORDWK70',
-    'TERHDE70',
-    'GOERE6',
-    'GOERE30',
-    'GOERE70',
-    'SCHOUWN30',
+    'ROTTMPT20',
+    'ROTTMPT30',
     'SCHOUWN70',
-    'WALCRN20',
-    'WALCRN50'
-    ]
+    'TERHDE70',
+    'TERSLG30',
+    'TERSLG70',
+    'TERSLG100',
+    'TERSLG135',
+    'WALCRN50',
+    'WALCRN70']
+
 #Loop through station data files
-for stationcode in stationcodes:
-#for stationcode in northsea.station_code:    
+for stationcode in stationcodes:    
     #Read station specific files
-    filename = "C:/Users/hanna/Documents/GitHub/rws-the-olden-days/data/x13/"+ stationcode + ".parquet"
+    filename = fpath + "rws-the-olden-days/data/x13/"+ stationcode + ".parquet"
     df = pq.read_table(source=filename).to_pandas()
     
     #Create datetime column
@@ -89,91 +76,53 @@ for stationcode in stationcodes:
         #Compile data into list
         data.append((stationcode, year, dpH, spm_avg, chlorophyll_avg))
 
-            
-            # #Plotting against chlorophyll
-            # ax2 = ax.twinx()
-            # ax2.scatter(dpH, df_L_year.chlorophyll, s=60, 
-            #             marker='x', c='seagreen', label = 'Chlorophyll')
-            
-            
-            #Add linear regressions for SPM & Chlorophyll
-            # L_spm = ~np.isnan(df_L_year.spm)
-            # slope, intercept, rv, pv, se = stats.linregress(dpH, df_L_year.spm[L_spm])
-            # ax.plot(dpH, intercept + slope * dpH,
-            #         c='royalblue', label='Linear regression SPM')
-    
-            # L_chlorophyll = ~np.isnan(df_L_year.chlorophyll)
-            # slope2, intercept2, rv2, pv2, se2 = stats.linregress(dpH, df_L_year.chlorophyll[L_chlorophyll])
-            # ax2.plot(dpH, intercept2 + slope2 * dpH,
-            #         c='seagreen', label='Linear regression Chlorophyll')
-            
-            #Pearson 
-            # L_pearson = df_L_year.spm.notnull()
-            # df_L_pearson = df_L_year.spm[L_pearson]
-            # dpH_pearson = np.linspace(min_pH, max_pH, num = len(df_L_pearson))
-            # pearson_coef, p_value = stats.pearsonr(dpH_pearson, df_L_pearson)
-            # ax.text(0, 0, f"Pearson coefficient = {pearson_coef}")
-            
-            #Formatting
-            # ax.set_title(f"{stationcode} {year}")
-            # ax.set_xlabel('\u0394' + 'pH')
-            # ax.set_ylabel('SPM')
-            # ax2.set_ylabel('Chlorophyll')
-            # fig.legend(loc='upper right', bbox_to_anchor=(1.25, 0.55))
-           
-            #Saving
-            #plt.savefig(f"figures/{stationcode} {year}.png")
-
 #Compile all data into one dataframe
 df2 = pd.DataFrame(data, columns = ['station', 'year', 'dpH', 'spm', 'chlorophyll'])
 
-#%%
-#Plot all spm vs dpH data
-fig, (ax1, ax2) = plt.subplots(figsize = (12, 4), ncols=2,  dpi=300)
+#%% SPM
 ax1.scatter(df2.spm, df2.dpH, s=60, marker='o', c='royalblue', alpha=0.4, edgecolor='none')
 
-#Pearson 
-L_pearson = df2.spm.notnull()
-df2_L_pearson = df2.spm[L_pearson]
-dpH_pearson = np.linspace(df2.dpH.min(), df2.dpH.max(), num = len(df2_L_pearson))
-# pearson_coef, p_value = stats.pearsonr(dpH_pearson, df2_L_pearson)
-# ax.text(30, 0, f"Pearson coefficient = {pearson_coef}")
-           
-# Spearman
-corr, _ = spearmanr(dpH_pearson, df2_L_pearson)
-ax1.set_xscale("log")
-ax1.text(15, 2.3, 'Spearmans correlation: %.3f' % corr)
+#Spearman
+L = ~np.isnan(df2.spm) & ~np.isnan(df2.dpH)
+df2_pH = df2.dpH[L]
+df2_spm = df2.spm[L]
+corr, _ = spearmanr(df2_pH, df2_spm)
+
+# Linear regression
+slope, intercept, rv, pv, se = stats.linregress(df2_spm, df2_pH)
+spm_interp = np.linspace(np.min(df2_spm), np.max(df2_spm), num=500)
+ax1.plot(spm_interp, intercept + slope * spm_interp, 
+         c='xkcd:pink', linestyle='--', linewidth=2)
  
 #Formatting
+ax1.set_xscale("log")
+ax1.yaxis.set_minor_locator(AutoMinorLocator(4))
+ax1.text(8, 1.9, 'Spearmans correlation: %.3f' % corr)
 ax1.set_title('\u0394' + 'pH vs SPM')
-ax1.set_xlabel('SPM')
+ax1.set_xlabel('SPM ($\mathregular{mg^{-L}}$)')
 ax1.set_ylabel('\u0394' + 'pH')
-#fig.legend(loc='upper right', bbox_to_anchor=(1.25, 0.55))
-   
-#Saving
-#plt.savefig("figures/dpH vs spm not all stations per year.png")
 
+#%% Chlorophyll
+ax2.scatter(df2.chlorophyll, df2.dpH, s=60, marker='o', c='xkcd:teal green', alpha=0.4, edgecolor='none')
 
-#Plot all chlorophyll vs dpH data
-ax2.scatter(df2.chlorophyll, df2.dpH, s=60, marker='o', c='seagreen', alpha=0.4, edgecolor='none')
+#Spearman
+L = ~np.isnan(df2.chlorophyll) & ~np.isnan(df2.dpH)
+df2_pH = df2.dpH[L]
+df2_chlor = df2.chlorophyll[L]
+corr, _ = spearmanr(df2_pH, df2_chlor)
 
-#Pearson 
-L_pearson = df2.chlorophyll.notnull()
-df2_L_pearson = df2.chlorophyll[L_pearson]
-dpH_pearson = np.linspace(df2.dpH.min(), df2.dpH.max(), num = len(df2_L_pearson))
-# pearson_coef, p_value = stats.pearsonr(dpH_pearson, df2_L_pearson)
-# ax.text(10, 0, f"Pearson coefficient = {pearson_coef}")
-
-# Spearman
-corr, _ = spearmanr(dpH_pearson, df2_L_pearson)
-ax2.set_xscale("log")
-ax2.text(2.8, 2.3, 'Spearmans correlation: %.3f' % corr)
+# Linear regression
+slope, intercept, rv, pv, se = stats.linregress(df2_chlor, df2_pH)
+chlor_interp = np.linspace(np.min(df2_chlor), np.max(df2_chlor), num=500)
+ax2.plot(chlor_interp, intercept + slope * chlor_interp, 
+         c='xkcd:light orange', linestyle='--', linewidth=2)
 
 #Formatting
-ax2.set_title('\u0394' + 'pH vs chlorophyll')
-ax2.set_xlabel('chlorophyll')
-ax2.set_ylabel('\u0394' + 'pH')
-#fig.legend(loc='upper right', bbox_to_anchor=(1.25, 0.55))
-   
-#Saving
+ax2.set_xscale("log")
+ax2.yaxis.set_minor_locator(AutoMinorLocator(4))
+ax2.text(2.9, 1.9, 'Spearmans correlation: %.3f' % corr)
+ax2.set_title('\u0394' + 'pH vs Chlorophyll')
+ax2.set_xlabel('Chl (\u03BC$\mathregular{g^{-L}}$)')
+ax2.set_ylabel('\u0394' + 'pH') 
+#%% Save
 plt.savefig("figures/dpH vs chlorophyll BOTH.png")

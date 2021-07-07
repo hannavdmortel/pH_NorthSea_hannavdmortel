@@ -2,7 +2,7 @@ import pandas as pd
 from matplotlib import pyplot as plt
 import numpy as np
 import matplotlib.dates as mdates
-from scipy import interpolate
+from matplotlib.ticker import (AutoMinorLocator)
 
 rws_file = 'C:/Users/hanna/Documents/GitHub/rws-the-olden-days/data/old_rws_data/rws_compilation.parquet'
 rws_all = pd.read_parquet(rws_file, engine='auto')
@@ -77,7 +77,6 @@ L6 = (gmL_x > mdates.datestr2num('2013-01-01')) & (gmL_x < mdates.datestr2num('2
 L7 = (gmL_x > mdates.datestr2num('2018-01-01')) & (gmL_x < mdates.datestr2num('2021-01-01'))
 
 fig, ax = plt.subplots(dpi=300, figsize=(8,2))
-
 ax.scatter(gmL_x[L1].index, gmL_y[L1],
            alpha=0.5, s=40, c='royalblue', edgecolor='none')
 ax.scatter(gmL_x[L2].index, gmL_y[L2],
@@ -95,9 +94,11 @@ ax.scatter(gmL_x[L7].index, gmL_y[L7],
 ax.set_yticks
 ax.set_xlabel('Year')
 ax.set_ylabel('pH')
-ax.minorticks_on()
+ax.xaxis.set_minor_locator(AutoMinorLocator(5))
+ax.yaxis.set_minor_locator(AutoMinorLocator(5))
 ax.set_axisbelow(True)
 ax.grid(axis='both')
 ax.grid(axis='both', which='minor', linestyle=':', linewidth='0.5')
+ax.set_xlim(gmL_x.min()-150, gmL_x.max()+150)
 
-ax.set_title('pH measurements North Sea')
+ax.set_title('Monthly average pH measurements Dutch Coastal Zone')
