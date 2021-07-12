@@ -44,7 +44,7 @@ ax.set_extent([2.3, 7.3, 51.3, 54.9], crs=ccrs.PlateCarree())
 
 #ADD LOCATION LABELS
 ax.text(5.3, 53.08, "BLAUWSOT", fontsize='xx-small',
-        bbox ={'fc':'red', 'ec':'none',
+        bbox ={'fc':(0.86, 0.3712, 0.33999999999999997), 'ec':'none',
                'alpha':0.5, 'pad':1},
         transform=ccrs.PlateCarree())
 ax.text(4.70187, 52.77, "CALLOG", fontsize='xx-small',
