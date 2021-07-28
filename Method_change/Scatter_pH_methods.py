@@ -4,7 +4,9 @@ import numpy as np
 import matplotlib.dates as mdates
 from matplotlib.ticker import (AutoMinorLocator)
 
-rws_file = 'C:/Users/hanna/Documents/GitHub/rws-the-olden-days/data/old_rws_data/rws_compilation.parquet'
+fpath = "C:/Users/hanna/Documents/GitHub/"
+
+rws_file = fpath + 'rws-the-olden-days/data/old_rws_data/rws_compilation.parquet'
 rws_all = pd.read_parquet(rws_file, engine='auto')
 rws = rws_all
 

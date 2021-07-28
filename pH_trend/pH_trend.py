@@ -5,8 +5,9 @@ import matplotlib.dates as mdates
 
 df=pd.DataFrame()
 
+fpath = "C:/Users/hanna/Documents/GitHub/"
 northsea = pd.read_csv(
-    "C:/Users/hanna/Documents/GitHub/pH-North-Sea/Maps/data/coordinates_stations.csv")
+    fpath + "pH-North-Sea/Maps/data/coordinates_stations.csv")
 
 for stationcode in northsea.station_code:    
     filename = "C:/Users/hanna/Documents/GitHub/rws-the-olden-days/data/x13/"+ stationcode + ".parquet"

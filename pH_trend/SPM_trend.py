@@ -13,8 +13,9 @@ df3=pd.DataFrame()
 df4=pd.DataFrame()
 df5=pd.DataFrame()
 
+fpath = "C:/Users/hanna/Documents/GitHub/"
 northsea = pd.read_csv(
-    "C:/Users/hanna/Documents/GitHub/pH-North-Sea/Maps/data/coordinates_stations.csv")
+    fpath + "pH-North-Sea/Maps/data/coordinates_stations.csv")
 
 # #Wadden
 station_codes_1 = [
@@ -91,6 +92,58 @@ station_codes_4 = [
     "WALCRN70"
     ]
 
+station_codes_5 = [
+    "CALLOG4", 
+    "CALLOG10", 
+    "EGMAZE4", 
+    "EGMAZE10", 
+    "GOERE6", 
+    "GOERE10", 
+    "NOORDWK4", 
+    "NOORDWK10", 
+    "ROTTMPT20", 
+    "SCHOUWN1", 
+    "SCHOUWN4", 
+    "SCHOUWN10", 
+    "TERSLG10", 
+    "WALCRN4", 
+    "WALCRN10",
+    "CALLOG30", 
+    "CALLOG50", 
+    "EGMAZE20", 
+    "EGMAZE30", 
+    "EGMAZE50", 
+    "GOERE20", 
+    "GOERE30", 
+    "GOERE50", 
+    "NOORDWK20", 
+    "NOORDWK30", 
+    "NOORDWK50", 
+    "ROTTMPT30", 
+    "ROTTMPT50", 
+    "SCHOUWN20", 
+    "SCHOUWN30", 
+    "TERSLG30",  
+    "TERSLG50", 
+    "WALCRN20", 
+    "WALCRN30", 
+    "WALCRN50",
+    "CALLOG70", 
+    "EGMAZE70", 
+    "GOERE70", 
+    "NOORDWK70", 
+    "ROTTMPT70", 
+    "ROTTMPT100", 
+    "SCHOUWN50", 
+    "SCHOUWN70", 
+    "TERHDE70", 
+    "TERSLG70", 
+    "TERSLG100", 
+    "TERSLG135", 
+    "TERSLG175",
+    "WALCRN70"
+    ]
+
 for stationcode in station_codes_1:
     filename = "C:/Users/hanna/Documents/GitHub/rws-the-olden-days/data/x13/"+ stationcode + ".parquet"
     df = pq.read_table(source=filename).to_pandas()
@@ -111,7 +164,7 @@ for stationcode in station_codes_4:
     df = pq.read_table(source=filename).to_pandas()
     df4 = df4.append(df, ignore_index=True) 
     
-for stationcode in northsea.station_code:
+for stationcode in station_codes_5:
     filename = "C:/Users/hanna/Documents/GitHub/rws-the-olden-days/data/x13/"+ stationcode + ".parquet"
     df = pq.read_table(source=filename).to_pandas()
     df5 = df5.append(df, ignore_index=True)
@@ -137,12 +190,14 @@ grouped5 = df5.groupby('YEAR').mean()
 
 fig, ax = plt.subplots(figsize=(5, 3), dpi=300)
 
-ax.plot(grouped1.datenum, grouped1.pH_trend, c='xkcd:light orange', linewidth=2.2, label='Wadden Sea', alpha=0.9)
-ax.plot(grouped2.datenum, grouped2.pH_trend, c='royalblue', linewidth=2.2, label='Nearshore (<20 km)', alpha=0.9)
-ax.plot(grouped3.datenum, grouped3.pH_trend, c='xkcd:teal', linewidth=2.2, label='Intermediate (20-50 km)', alpha=0.9)
-ax.plot(grouped4.datenum, grouped4.pH_trend, c='xkcd:pink', linewidth=2.2, label='Offshore (≥70 km)', alpha=0.9)
+ax.plot(grouped1.datenum, grouped1.spm_trend, c='xkcd:light orange', linewidth=2.2, label='Wadden Sea', alpha=0.9)
+ax.plot(grouped2.datenum, grouped2.spm_trend, c='royalblue', linewidth=2.2, label='Nearshore (<20 km)', alpha=0.9)
+ax.plot(grouped3.datenum, grouped3.spm_trend, c='xkcd:teal', linewidth=2.2, label='Intermediate (20-50 km)', alpha=0.9)
+ax.plot(grouped4.datenum, grouped4.spm_trend, c='xkcd:pink', linewidth=2.2, label='Offshore (≥70 km)', alpha=0.9)
+#ax.plot(grouped5.datenum, grouped5.spm_trend, c='xkcd:black', linewidth=1, label='', alpha=0.9)
+
 #ax.scatter(df5.YEAR, df5.pH, alpha=0.2, s=8, c='grey', edgecolor='none')
-sns.regplot(x=df5.datenum, y=df5.pH, ax=ax, fit_reg = False, 
+sns.regplot(x=df5.datenum, y=df5.spm, ax=ax, fit_reg = False, 
             x_jitter=0.1, y_jitter=0.1, 
             color='grey',
             scatter_kws={'alpha':0.12, 's':8, 'edgecolor':'none'}
@@ -151,16 +206,17 @@ sns.regplot(x=df5.datenum, y=df5.pH, ax=ax, fit_reg = False,
 ax.xaxis.set_minor_locator(MultipleLocator(365.25))
 ax.grid(axis='both')
 ax.grid(axis='both', which='minor', linestyle=':', linewidth='0.5')
-ax.set_xlim([datetime(1973, 1, 1), datetime(2020, 1, 1)])
+ax.set_xlim([datetime(1975, 3, 1), datetime(2019, 2, 1)])
 ax.set_xticks([datetime(1980, 1, 1), datetime(1990, 1, 1), datetime(2000, 1, 1), datetime(2010, 1, 1)])
 ax.set_xticklabels(['1980', '1990', '2000', '2010'])
-ax.set_ylim([7.2, 9])
+ax.set_ylim(10**-0.1,10**2.2)
+ax.set_yscale('log')
 ax.set_xlabel('Years')
-ax.set_ylabel('pH')
+ax.set_ylabel('SPM (mg $\mathregular{L^{-1}}$)')
 
-fig.suptitle('pH trends Dutch coastal zone')
+fig.suptitle('SPM trends Dutch coastal zone')
 fig.legend(loc='upper left', bbox_to_anchor=(0.16, -0.02), fontsize=8, ncol=2)
-plt.savefig("figures/pH trend together.png", bbox_inches='tight')
+plt.savefig("figures/SPM trend together log.png", bbox_inches='tight')
 
 
 

@@ -5,6 +5,8 @@ import matplotlib.dates as mdates
 from matplotlib.ticker import (MultipleLocator)
 from datetime import datetime
 import seaborn as sns
+from scipy import interpolate
+import numpy as np
 
 df=pd.DataFrame()
 df1=pd.DataFrame()
@@ -13,8 +15,9 @@ df3=pd.DataFrame()
 df4=pd.DataFrame()
 df5=pd.DataFrame()
 
+fpath = "C:/Users/hanna/Documents/GitHub/"
 northsea = pd.read_csv(
-    "C:/Users/hanna/Documents/GitHub/pH-North-Sea/Maps/data/coordinates_stations.csv")
+    fpath + "pH-North-Sea/Maps/data/coordinates_stations.csv")
 
 # #Wadden
 station_codes_1 = [
@@ -132,35 +135,52 @@ df5['YEAR'] = pd.to_datetime(df5.YEAR)
 grouped1 = df1.groupby('YEAR').mean()
 grouped2 = df2.groupby('YEAR').mean()
 grouped3 = df3.groupby('YEAR').mean()
-grouped4 = df4.groupby('YEAR').mean()
+grouped4a = df4.groupby('YEAR').mean()
+#Adding missing trend data
+grouped4b = df4.groupby('YEAR').mean()
+L4 = (
+      grouped4b.datenum > mdates.datestr2num('2001-03-01')) & (
+      grouped4b.datenum < mdates.datestr2num('2018-07-01')) & (
+      ~np.isnan(grouped4b.nitrxte)
+      )
+grouped4b = grouped4b[L4]
 grouped5 = df5.groupby('YEAR').mean()
+
+#Interpolation for nitrxte group4
+interp_spline = interpolate.UnivariateSpline(grouped4b.datenum, grouped4b.nitrxte, s=850)
+datenum_interp = np.linspace(np.min(grouped4b.datenum), np.max(grouped4b.datenum), num=1000)
+nox_spline = interp_spline(datenum_interp)
 
 fig, ax = plt.subplots(figsize=(5, 3), dpi=300)
 
-ax.plot(grouped1.datenum, grouped1.pH_trend, c='xkcd:light orange', linewidth=2.2, label='Wadden Sea', alpha=0.9)
-ax.plot(grouped2.datenum, grouped2.pH_trend, c='royalblue', linewidth=2.2, label='Nearshore (<20 km)', alpha=0.9)
-ax.plot(grouped3.datenum, grouped3.pH_trend, c='xkcd:teal', linewidth=2.2, label='Intermediate (20-50 km)', alpha=0.9)
-ax.plot(grouped4.datenum, grouped4.pH_trend, c='xkcd:pink', linewidth=2.2, label='Offshore (≥70 km)', alpha=0.9)
-#ax.scatter(df5.YEAR, df5.pH, alpha=0.2, s=8, c='grey', edgecolor='none')
-sns.regplot(x=df5.datenum, y=df5.pH, ax=ax, fit_reg = False, 
+ax.plot(grouped1.datenum, grouped1.nitrxte_trend, c='xkcd:light orange', linewidth=2.2, label='Wadden Sea', alpha=0.9)
+ax.plot(grouped2.datenum, grouped2.nitrxte_trend, c='royalblue', linewidth=2.2, label='Nearshore (<20 km)', alpha=0.9)
+ax.plot(grouped3.datenum, grouped3.nitrxte_trend, c='xkcd:teal', linewidth=2.2, label='Intermediate (20-50 km)', alpha=0.9)
+ax.plot(grouped4a.datenum, grouped4a.nitrxte_trend, c='xkcd:pink', linewidth=2.2, label='Offshore (≥70 km)', alpha=0.9)
+ax.plot(datenum_interp, nox_spline, c='xkcd:pink', linewidth=2.2, alpha=0.9)
+ax.scatter(df5.YEAR, df5.pH, alpha=0.2, s=8, c='grey', edgecolor='none')
+sns.regplot(x=df5.datenum, y=df5.nitrxte, ax=ax, fit_reg = False, 
             x_jitter=0.1, y_jitter=0.1, 
             color='grey',
             scatter_kws={'alpha':0.12, 's':8, 'edgecolor':'none'}
             ).set(xlabel=None, ylabel=None)
+
 #Formatting
 ax.xaxis.set_minor_locator(MultipleLocator(365.25))
 ax.grid(axis='both')
 ax.grid(axis='both', which='minor', linestyle=':', linewidth='0.5')
-ax.set_xlim([datetime(1973, 1, 1), datetime(2020, 1, 1)])
+ax.set_xlim([datetime(1975, 3, 1), datetime(2019, 2, 1)])
 ax.set_xticks([datetime(1980, 1, 1), datetime(1990, 1, 1), datetime(2000, 1, 1), datetime(2010, 1, 1)])
 ax.set_xticklabels(['1980', '1990', '2000', '2010'])
-ax.set_ylim([7.2, 9])
+ax.set_ylim([0, 60])
+#ax.set_ylim(10**-0.5,10**2)
+#ax.set_yscale('log')
 ax.set_xlabel('Years')
-ax.set_ylabel('pH')
+ax.set_ylabel('$NO_{x}$ (\u03BCmol $\mathregular{L^{-1}}$)')
 
-fig.suptitle('pH trends Dutch coastal zone')
+fig.suptitle('$NO_{x}$ trends Dutch coastal zone')
 fig.legend(loc='upper left', bbox_to_anchor=(0.16, -0.02), fontsize=8, ncol=2)
-plt.savefig("figures/pH trend together.png", bbox_inches='tight')
+plt.savefig("figures/Nitrate trend together.png", bbox_inches='tight')
 
 
 

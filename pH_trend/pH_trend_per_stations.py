@@ -11,8 +11,9 @@ df3=pd.DataFrame()
 df4=pd.DataFrame()
 df5=pd.DataFrame()
 
+fpath = "C:/Users/hanna/Documents/GitHub/"
 northsea = pd.read_csv(
-    "C:/Users/hanna/Documents/GitHub/pH-North-Sea/Maps/data/coordinates_stations.csv")
+    fpath + "pH-North-Sea/Maps/data/coordinates_stations.csv")
 
 # #Wadden
 station_codes_1 = [

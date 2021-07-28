@@ -7,7 +7,6 @@ from scipy.stats.stats import spearmanr
 import matplotlib.dates as mdates
 from matplotlib.ticker import (AutoMinorLocator)
 
-
 fpath = "C:/Users/hanna/Documents/GitHub/"
 
 #%%
@@ -89,15 +88,16 @@ df2_spm = df2.spm[L]
 corr, _ = spearmanr(df2_pH, df2_spm)
 
 # Linear regression
-slope, intercept, rv, pv, se = stats.linregress(df2_spm, df2_pH)
+slope1, intercept1, rv, pv, se = stats.linregress(10**df2_spm, df2_pH)
 spm_interp = np.linspace(np.min(df2_spm), np.max(df2_spm), num=500)
-ax1.plot(spm_interp, intercept + slope * spm_interp, 
+ax1.plot(spm_interp, intercept1 + slope1 * spm_interp, 
          c='xkcd:pink', linestyle='--', linewidth=2)
  
 #Formatting
 ax1.set_xscale("log")
+#ax1.set_xlim(10**-0.1, 10**1.65)
 ax1.yaxis.set_minor_locator(AutoMinorLocator(4))
-ax1.text(8, 1.9, 'Spearmans correlation: %.3f' % corr)
+ax1.text(8.9, 1.9, 'Spearman correlation: %.2f' % corr)
 ax1.set_title('\u0394' + 'pH vs SPM')
 ax1.set_xlabel('SPM ($\mathregular{mg^{-L}}$)')
 ax1.set_ylabel('\u0394' + 'pH')
@@ -112,17 +112,19 @@ df2_chlor = df2.chlorophyll[L]
 corr, _ = spearmanr(df2_pH, df2_chlor)
 
 # Linear regression
-slope, intercept, rv, pv, se = stats.linregress(df2_chlor, df2_pH)
-chlor_interp = np.linspace(np.min(df2_chlor), np.max(df2_chlor), num=500)
-ax2.plot(chlor_interp, intercept + slope * chlor_interp, 
+slope2, intercept2, rv, pv, se = stats.linregress(10**df2_chlor, df2_pH)
+chlor_interp = (np.linspace(np.min(df2_chlor), np.max(df2_chlor), num=500))
+ax2.plot(chlor_interp, intercept2 + slope2 * chlor_interp, 
          c='xkcd:light orange', linestyle='--', linewidth=2)
 
 #Formatting
 ax2.set_xscale("log")
+#ax2.set_ylim(0,2)
+ax2.set_xlim(10**(-0.4), 10**1.35)
 ax2.yaxis.set_minor_locator(AutoMinorLocator(4))
-ax2.text(2.9, 1.9, 'Spearmans correlation: %.3f' % corr)
+ax2.text(3.1, 1.9, 'Spearman correlation: %.2f' % corr)
 ax2.set_title('\u0394' + 'pH vs Chlorophyll')
 ax2.set_xlabel('Chl (\u03BC$\mathregular{g^{-L}}$)')
 ax2.set_ylabel('\u0394' + 'pH') 
 #%% Save
-plt.savefig("figures/dpH vs chlorophyll BOTH.png")
+plt.savefig("figures/dpH vs chlorophyll BOTH log.png")

@@ -137,12 +137,12 @@ grouped5 = df5.groupby('YEAR').mean()
 
 fig, ax = plt.subplots(figsize=(5, 3), dpi=300)
 
-ax.plot(grouped1.datenum, grouped1.pH_trend, c='xkcd:light orange', linewidth=2.2, label='Wadden Sea', alpha=0.9)
-ax.plot(grouped2.datenum, grouped2.pH_trend, c='royalblue', linewidth=2.2, label='Nearshore (<20 km)', alpha=0.9)
-ax.plot(grouped3.datenum, grouped3.pH_trend, c='xkcd:teal', linewidth=2.2, label='Intermediate (20-50 km)', alpha=0.9)
-ax.plot(grouped4.datenum, grouped4.pH_trend, c='xkcd:pink', linewidth=2.2, label='Offshore (≥70 km)', alpha=0.9)
+ax.plot(grouped1.datenum, grouped1.pp_trend, c='xkcd:light orange', linewidth=2.2, label='Wadden Sea', alpha=0.9)
+ax.plot(grouped2.datenum, grouped2.pp_trend, c='royalblue', linewidth=2.2, label='Nearshore (<20 km)', alpha=0.9)
+ax.plot(grouped3.datenum, grouped3.pp_trend, c='xkcd:teal', linewidth=2.2, label='Intermediate (20-50 km)', alpha=0.9)
+ax.plot(grouped4.datenum, grouped4.pp_trend, c='xkcd:pink', linewidth=2.2, label='Offshore (≥70 km)', alpha=0.9)
 #ax.scatter(df5.YEAR, df5.pH, alpha=0.2, s=8, c='grey', edgecolor='none')
-sns.regplot(x=df5.datenum, y=df5.pH, ax=ax, fit_reg = False, 
+sns.regplot(x=df5.datenum, y=df5.pp, ax=ax, fit_reg = False, 
             x_jitter=0.1, y_jitter=0.1, 
             color='grey',
             scatter_kws={'alpha':0.12, 's':8, 'edgecolor':'none'}
@@ -151,16 +151,17 @@ sns.regplot(x=df5.datenum, y=df5.pH, ax=ax, fit_reg = False,
 ax.xaxis.set_minor_locator(MultipleLocator(365.25))
 ax.grid(axis='both')
 ax.grid(axis='both', which='minor', linestyle=':', linewidth='0.5')
-ax.set_xlim([datetime(1973, 1, 1), datetime(2020, 1, 1)])
+ax.set_xlim([datetime(1975, 3, 1), datetime(2019, 2, 1)])
 ax.set_xticks([datetime(1980, 1, 1), datetime(1990, 1, 1), datetime(2000, 1, 1), datetime(2010, 1, 1)])
 ax.set_xticklabels(['1980', '1990', '2000', '2010'])
-ax.set_ylim([7.2, 9])
+ax.set_ylim(10**-1,10**0.1)
+ax.set_yscale('log')
 ax.set_xlabel('Years')
-ax.set_ylabel('pH')
+ax.set_ylabel('POM (mg $\mathregular{L^{-1}}$)')
 
-fig.suptitle('pH trends Dutch coastal zone')
+fig.suptitle('POM trends Dutch coastal zone')
 fig.legend(loc='upper left', bbox_to_anchor=(0.16, -0.02), fontsize=8, ncol=2)
-plt.savefig("figures/pH trend together.png", bbox_inches='tight')
+#plt.savefig("figures/SPM trend together log.png", bbox_inches='tight')
 
 
 

@@ -21,8 +21,8 @@ ax.set_extent([2.3, 7.3, 51.3, 54.9], crs=ccrs.PlateCarree())
 #STATION CODES PER REGION
 station_codes_wadden = ["BLAUWSOT", "DANTZGT", "EILDBG", 'HOLWDBG', 'MALZN', 'VLIESZD', 'WESTMP', 'ZOUTKPLZGT', 'ZUIDOLWNOT', 'DOOVBWT']
 station_codes_nearshore = ["CALLOG4", "CALLOG10", "EGMAZE4", "EGMAZE10", "GOERE6", "GOERE10", "IJMDN3", "NOORDWK4", "NOORDWK10", "ROTTMPT20", "SCHOUWN1", "SCHOUWN4", "SCHOUWN10", "TERSLG10", "WALCRN4", "WALCRN10"]
-station_codes_intermediate = ["CALLOG30", "CALLOG50", "EGMAZE20", "EGMAZE30", "EGMAZE50", "GOERE20", "GOERE30", "GOERE50", "NOORDWK20", "NOORDWK30", "NOORDWK50", "ROTTMPT30", "ROTTMPT50", "SCHOUWN20", "SCHOUWN30", "TERSLG30",  "TERSLG50", "WALCRN20", "WALCRN30", "WALCRN50"]
-station_codes_offshore = ["CALLOG70", "EGMAZE70", "GOERE70", "NOORDWK70", "ROTTMPT70", "ROTTMPT100", "SCHOUWN50", "SCHOUWN70", "TERHDE70", "TERSLG70", "TERSLG100", "TERSLG135", "TERSLG175","WALCRN70"]
+station_codes_intermediate = ["CALLOG30", "CALLOG50", "EGMAZE20", "EGMAZE30", "EGMAZE50", "GOERE20", "GOERE30", "GOERE50", "NOORDWK20", "NOORDWK30", "NOORDWK50", "ROTTMPT30", "ROTTMPT50", "SCHOUWN20", "SCHOUWN30", "SCHOUWN50", "TERSLG30",  "TERSLG50", "WALCRN20", "WALCRN30", "WALCRN50"]
+station_codes_offshore = ["CALLOG70", "EGMAZE70", "GOERE70", "NOORDWK70", "ROTTMPT70", "ROTTMPT100", "SCHOUWN70", "TERHDE70", "TERSLG70", "TERSLG100", "TERSLG135", "TERSLG175","WALCRN70"]
 
 #ADD LOCATION LABELS
 labels = {
@@ -79,28 +79,28 @@ for y in range(60):
     for x in range(len(station_codes_wadden)):
         if northsea.station_code[y] == station_codes_wadden[x]:
             ax.scatter(northsea.lon_dd[y], northsea.lat_dd[y], 
-                s=15, c='xkcd:teal',
+                s=15, c='xkcd:light orange',
                 linewidth=0.4, edgecolor='black', zorder=10,
                 transform=ccrs.PlateCarree())
     #Nearshore
     for x in range(len(station_codes_nearshore)):  
         if northsea.station_code[y] == station_codes_nearshore[x]:
             ax.scatter(northsea.lon_dd[y], northsea.lat_dd[y], 
-                s=15, c='xkcd:pink',
+                s=15, c='royalblue',
                 linewidth=0.4, edgecolor='black', zorder=10,
                 transform=ccrs.PlateCarree())
     #Intermediate
     for x in range(len(station_codes_intermediate)):
         if northsea.station_code[y] == station_codes_intermediate[x]:
             ax.scatter(northsea.lon_dd[y], northsea.lat_dd[y], 
-                s=15, c='xkcd:light orange', 
+                s=15, c='xkcd:teal', 
                 linewidth=0.4, edgecolor='black', zorder=10,
                 transform=ccrs.PlateCarree())     
     #Offshore
     for x in range(len(station_codes_offshore)):
         if northsea.station_code[y] == station_codes_offshore[x]:
             ax.scatter(northsea.lon_dd[y], northsea.lat_dd[y], 
-                s=15, c='royalblue',
+                s=15, c='xkcd:pink',
                 linewidth=0.4, edgecolor='black', zorder=10,
                 transform=ccrs.PlateCarree())
 
