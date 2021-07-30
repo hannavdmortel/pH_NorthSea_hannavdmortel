@@ -83,13 +83,13 @@ ax1.scatter(df2.spm, df2.dpH, s=60, marker='o', c='royalblue', alpha=0.4, edgeco
 
 #Spearman
 L1 = ~np.isnan(df2.spm) & ~np.isnan(df2.dpH)
-corr, _ = spearmanr(df2.dpH[L1], df2.spm[L1])
+corr1, _ = spearmanr(df2.dpH[L1], df2.spm[L1])
 
 L2 = df2.spm > 10
 corr2, _ = spearmanr(df2.dpH[L2], df2.spm[L2])
 
 # Linear regression
-slope1, intercept1, rv, pv, se = stats.linregress(10**df2.spm[L1], df2.dpH[L1])
+slope1, intercept1, rv, pv, se = stats.linregress(df2.spm[L1], df2.dpH[L1])
 spm_interp = np.linspace(np.min(df2.spm[L1]), np.max(df2.spm[L1]), num=500)
 ax1.plot(spm_interp, intercept1 + slope1 * spm_interp, 
          c='xkcd:pink', linestyle='--', linewidth=2)
@@ -98,7 +98,7 @@ ax1.plot(spm_interp, intercept1 + slope1 * spm_interp,
 ax1.set_xscale("log")
 #ax1.set_xlim(10**-0.1, 10**1.65)
 ax1.yaxis.set_minor_locator(AutoMinorLocator(4))
-ax1.text(8.9, 1.9, 'Spearman correlation: %.2f' % corr)
+ax1.text(8.9, 1.9, 'Spearman correlation: %.2f' % corr1)
 ax1.set_title('\u0394' + 'pH vs SPM')
 ax1.set_xlabel('SPM ($\mathregular{mg^{-L}}$)')
 ax1.set_ylabel('\u0394' + 'pH')
@@ -113,7 +113,7 @@ L4 = df2.spm > 6
 corr4, _ = spearmanr(df2.dpH[L4], df2.spm[L4])
 
 # Linear regression
-slope2, intercept2, rv, pv, se = stats.linregress(10**df2.chlorophyll[L3], df2.dpH[L3])
+slope2, intercept2, rv, pv, se = stats.linregress(df2.chlorophyll[L3], df2.dpH[L3])
 chlor_interp = (np.linspace(np.min(df2.chlorophyll[L3]), np.max(df2.chlorophyll[L3]), num=500))
 ax2.plot(chlor_interp, intercept2 + slope2 * chlor_interp, 
          c='xkcd:light orange', linestyle='--', linewidth=2)
@@ -123,7 +123,7 @@ ax2.set_xscale("log")
 #ax2.set_ylim(0,2)
 ax2.set_xlim(10**(-0.4), 10**1.35)
 ax2.yaxis.set_minor_locator(AutoMinorLocator(4))
-ax2.text(3.1, 1.9, 'Spearman correlation: %.2f' % corr)
+ax2.text(3.1, 1.9, 'Spearman correlation: %.2f' % corr3)
 ax2.set_title('\u0394' + 'pH vs Chlorophyll')
 ax2.set_xlabel('Chl (\u03BC$\mathregular{g^{-L}}$)')
 ax2.set_ylabel('\u0394' + 'pH') 

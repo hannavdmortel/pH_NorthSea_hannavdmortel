@@ -4,8 +4,9 @@ import pandas as pd
 from scipy.stats.stats import spearmanr
 import matplotlib.dates as mdates
 
+fpath = "C:/Users/hanna/Documents/GitHub/"
 northsea = pd.read_csv(
-    "C:/Users/hanna/Documents/GitHub/pH-North-Sea/Maps/data/coordinates_stations.csv")
+    fpath + "/GitHub/pH-North-Sea/Maps/data/coordinates_stations.csv")
 
 #CHOOSE VARIABLES
 #(+ _irregular, _seasonal or _trend, or datenum for time)

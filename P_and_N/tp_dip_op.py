@@ -33,7 +33,6 @@ var1 = "phosphate"
 var2 = "tp"
 
 fpath = "C:/Users/hanna/Documents/GitHub/"
-#fpath = '/home/matthew/github/'
 
 #%% Wadden Sea
 #Choose location

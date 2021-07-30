@@ -33,7 +33,6 @@ var1 = "DIN"
 var2 = "tn"
 
 fpath = "C:/Users/hanna/Documents/GitHub/"
-#fpath = '/home/matthew/github/'
 
 #%% Wadden Sea
 #Choose location
