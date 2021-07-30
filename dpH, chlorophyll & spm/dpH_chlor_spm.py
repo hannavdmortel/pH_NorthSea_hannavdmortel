@@ -82,14 +82,15 @@ df2 = pd.DataFrame(data, columns = ['station', 'year', 'dpH', 'spm', 'chlorophyl
 ax1.scatter(df2.spm, df2.dpH, s=60, marker='o', c='royalblue', alpha=0.4, edgecolor='none')
 
 #Spearman
-L = ~np.isnan(df2.spm) & ~np.isnan(df2.dpH)
-df2_pH = df2.dpH[L]
-df2_spm = df2.spm[L]
-corr, _ = spearmanr(df2_pH, df2_spm)
+L1 = ~np.isnan(df2.spm) & ~np.isnan(df2.dpH)
+corr, _ = spearmanr(df2.dpH[L1], df2.spm[L1])
+
+L2 = df2.spm > 10
+corr2, _ = spearmanr(df2.dpH[L2], df2.spm[L2])
 
 # Linear regression
-slope1, intercept1, rv, pv, se = stats.linregress(10**df2_spm, df2_pH)
-spm_interp = np.linspace(np.min(df2_spm), np.max(df2_spm), num=500)
+slope1, intercept1, rv, pv, se = stats.linregress(10**df2.spm[L1], df2.dpH[L1])
+spm_interp = np.linspace(np.min(df2.spm[L1]), np.max(df2.spm[L1]), num=500)
 ax1.plot(spm_interp, intercept1 + slope1 * spm_interp, 
          c='xkcd:pink', linestyle='--', linewidth=2)
  
@@ -106,14 +107,14 @@ ax1.set_ylabel('\u0394' + 'pH')
 ax2.scatter(df2.chlorophyll, df2.dpH, s=60, marker='o', c='xkcd:teal green', alpha=0.4, edgecolor='none')
 
 #Spearman
-L = ~np.isnan(df2.chlorophyll) & ~np.isnan(df2.dpH)
-df2_pH = df2.dpH[L]
-df2_chlor = df2.chlorophyll[L]
-corr, _ = spearmanr(df2_pH, df2_chlor)
+L3 = ~np.isnan(df2.chlorophyll) & ~np.isnan(df2.dpH)
+corr3, _ = spearmanr(df2.dpH[L3], df2.chlorophyll[L3])
+L4 = df2.spm > 6
+corr4, _ = spearmanr(df2.dpH[L4], df2.spm[L4])
 
 # Linear regression
-slope2, intercept2, rv, pv, se = stats.linregress(10**df2_chlor, df2_pH)
-chlor_interp = (np.linspace(np.min(df2_chlor), np.max(df2_chlor), num=500))
+slope2, intercept2, rv, pv, se = stats.linregress(10**df2.chlorophyll[L3], df2.dpH[L3])
+chlor_interp = (np.linspace(np.min(df2.chlorophyll[L3]), np.max(df2.chlorophyll[L3]), num=500))
 ax2.plot(chlor_interp, intercept2 + slope2 * chlor_interp, 
          c='xkcd:light orange', linestyle='--', linewidth=2)
 

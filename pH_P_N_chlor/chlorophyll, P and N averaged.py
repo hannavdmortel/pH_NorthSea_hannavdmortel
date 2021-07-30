@@ -23,7 +23,7 @@ P = 'tp'
 N = 'tn'
 
 #Choose location
-location = locations[4]
+location = locations[1]
     
 #Wadden Sea
 if location == 'WaddenSea':

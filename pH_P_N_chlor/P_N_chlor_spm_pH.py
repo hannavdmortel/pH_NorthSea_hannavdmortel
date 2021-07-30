@@ -187,5 +187,5 @@ patch5 = mpatches.Patch(color='xkcd:coral', label= 'SPM')
 plt.legend(handles=[patch1, patch2, patch3, patch4, patch5], 
            bbox_to_anchor=(1.16, -0.2), fontsize=8, ncol=5)
 
-fig.savefig("figures/seasonal/"+ location + "_" + startyear + "-" + endyear + ".png",
-            bbox_inches='tight')
+#fig.savefig("figures/seasonal/"+ location + "_" + startyear + "-" + endyear + ".png",
+ #           bbox_inches='tight')

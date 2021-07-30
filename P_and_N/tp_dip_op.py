@@ -7,6 +7,7 @@ import seaborn as sns
 import matplotlib.dates as mdates
 import matplotlib.patches as mpatches
 from matplotlib.ticker import (AutoMinorLocator)
+from scipy.stats.stats import spearmanr
 
 
 x1=pd.DataFrame()
@@ -113,6 +114,13 @@ axs[0,0].xaxis.set_minor_locator(AutoMinorLocator(2))
 axs[0,0].tick_params(axis='y', labelsize=7)
 axs[0,0].set_title('Wadden Sea', fontsize=10)
 
+#Spearman correlation
+#_var1 = var1_pchip
+_var1 = var2_pchip-var1_pchip
+_var2 = pH_pchip
+corr1, _ = spearmanr(_var1, _var2)
+corr1 = "%.1f" % corr1
+
 #%% Nearshore <20km
 location = locations[2]
 
@@ -191,6 +199,12 @@ axs[0,1].xaxis.set_minor_locator(AutoMinorLocator(2))
 axs[0,1].tick_params(axis='y', labelsize=7)
 axs[0,1].set_title('Nearshore (<20 km)', fontsize=10)
 
+#Spearman correlation
+#_var1 = var1_pchip
+_var1 = var2_pchip-var1_pchip
+_var2 = pH_pchip
+corr2, _ = spearmanr(_var1, _var2)
+corr2 = "%.1f" % corr2
 #%% Intermediate 20-50 km
 location = locations[3]
 
@@ -269,6 +283,13 @@ axs[1,0].set_xticklabels([' ', 'Feb', 'April', 'June', 'Aug', 'Oct', 'Dec'], fon
 axs[1,0].xaxis.set_minor_locator(AutoMinorLocator(2))
 axs[1,0].tick_params(axis='y', labelsize=7)
 axs[1,0].set_title('Intermediate (20-50 km)', fontsize=10)
+
+#Spearman correlation
+#_var1 = var1_pchip
+_var1 = var2_pchip-var1_pchip
+_var2 = pH_pchip
+corr3, _ = spearmanr(_var1, _var2)
+corr3 = "%.1f" % corr3
 #%% Offshore 70+ km
 location = locations[4]
 
@@ -349,6 +370,12 @@ axs[1,1].xaxis.set_minor_locator(AutoMinorLocator(2))
 axs[1,1].tick_params(axis='y', labelsize=7)
 axs[1,1].set_title('Offshore (≥70 km)', fontsize=10)
 
+#Spearman correlation
+#_var1 = var1_pchip
+_var1 = var2_pchip-var1_pchip
+_var2 = pH_pchip
+corr4, _ = spearmanr(_var1, _var2)
+corr4 = "%.1f" % corr4
 #%% Formatting and plotting
 fig.suptitle('Monthly averaged P surface waters \n 1973-2020', 
              fontsize=12, x=0.36, y=0.97) 
@@ -363,3 +390,4 @@ plt.legend(handles=[teal_patch, orange_patch, grey_patch, coral_patch],
 
 #Saving
 plt.savefig("figures/phosphate_tp_with_pH.png", bbox_inches='tight')
+
